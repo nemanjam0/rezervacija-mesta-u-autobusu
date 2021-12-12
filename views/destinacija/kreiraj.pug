@@ -1,0 +1,14 @@
+extends ../layout
+block content  
+    .row.justify-content-center
+        .col-xs-12.col-md-6
+            h3 Dodaj novu destinaciju
+            form(action='/destinacija/kreiraj' method='POST')
+                .form-group
+                    label(for='naziv') Naziv
+                    input#naziv.form-control(type='text' name='naziv' value=locals.old('naziv'))
+                .form-group
+                    label(for='cena_peronske') Cena peronske karte
+                    input#cena_peronske.form-control(type='text' name='cena_peronske' value=locals.old('cena_peronske'))
+                .form-group
+                    button.btn.btn-primary(type='submit') Kreiraj

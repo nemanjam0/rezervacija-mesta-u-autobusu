@@ -1,0 +1,21 @@
+//fonts
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;500;600;700&display=swap');
+
+//colors
+$blue:hsl(236, 80%, 57%);
+$dark-blue:hsl(248,35%,8%);
+$light-blue:hsl(234,32%,17%);
+$text-color:hsl(240,9%,91%);
+$text-gray-color:hsl(243,10%,66%);
+$placeholder-color:hsl(231,9%,42%);
+$btn-background:hsl(230,5%,45%);
+$box-shadow:0 0 25px 0 hsla(0, 0%, 0%, 0.15);
+$primary-btn-bg-color:hsl(210, 10%, 23%);
+$primary-btn-color:white;
+$font:"Raleway", sans-serif;
+
+//imports
+@import './extends';
+@import './mixins';
+@import './layouts';
+@import './components';

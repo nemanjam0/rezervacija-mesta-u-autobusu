@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@100;500;600;700&display=swap");
+.polasci .polazak .karta-btn, .primary-btn {
+  color: white;
+  background-color: #353b41;
+}
+
+.polasci .polazak .karta-btn:hover, .primary-btn:hover {
+  background: white;
+  color: #353b41;
+  border: 1px solid #353b41;
+}
+
+body {
+  min-height: 2000px;
+}
+
+#hero-container {
+  background: url("../../images/hero.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-width: 100%;
+  min-height: 400px;
+  background-position: right;
+  height: auto;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+#hero-container .menu-container {
+  background-color: white;
+  margin-bottom: -30px;
+  padding: 1rem;
+  -webkit-box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15);
+}
+
+#hero-container .swap {
+  position: absolute;
+  bottom: 10px;
+  left: 100%;
+  border: 0;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  border-radius: 50%;
+}
+
+#hero-container .swap:hover {
+  color: red;
+}
+
+.polasci .polazak {
+  background-color: white;
+  padding: .5rem 1rem;
+  border: 1px solid black;
+  -webkit-box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15);
+  -webkit-transition: -webkit-transform .4s;
+  transition: -webkit-transform .4s;
+  transition: transform .4s;
+  transition: transform .4s, -webkit-transform .4s;
+  margin-bottom: .5rem;
+}
+
+.polasci .polazak:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  -webkit-transition: -webkit-transform .4s;
+  transition: -webkit-transform .4s;
+  transition: transform .4s;
+  transition: transform .4s, -webkit-transform .4s;
+}
+
+.autobus-prikaz {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.autobus-prikaz .broj_reda {
+  padding-right: 1rem;
+}
+
+.autobus-prikaz .sedista .sediste {
+  border: 0;
+  background: url("../../images/sedista.png") no-repeat scroll -1px 0 transparent;
+  height: 21px;
+  width: 25px;
+  text-align: center;
+}
+
+.autobus-prikaz .sedista .sediste.slobodno:hover, .autobus-prikaz .sedista .sediste.slobodno.cekanje {
+  background-position: -26px -0px;
+}
+
+.autobus-prikaz .sedista .sediste.moja-rezervacija {
+  background-position: -78px -0px;
+}
+
+.autobus-prikaz .sedista .sediste.rezervisano {
+  background-position: -52px -0px;
+  cursor: unset;
+}
+
+.autobus-prikaz .sedista .sediste.rezervisano:hover {
+  background-position: -52px -0px;
+}
+
+.autobus-prikaz .sedista .red {
+  max-width: 150px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+/*# sourceMappingURL=main.css.map */

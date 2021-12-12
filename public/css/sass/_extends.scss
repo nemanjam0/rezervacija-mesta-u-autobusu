@@ -1,0 +1,17 @@
+%flex-center
+{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+%primary-btn
+{
+    color:$primary-btn-color;
+    background-color:$primary-btn-bg-color;
+    &:hover
+    {
+        background: white;
+        color:$primary-btn-bg-color;
+        border:1px solid $primary-btn-bg-color;
+    }
+}

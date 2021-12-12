@@ -1,0 +1,145 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../public/css/sass/main.css">
+    <title>Rezervacija autobuskih karata</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button type="button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Strana 1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Strana 2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Strana 3</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Strana 4</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+      <form class="container rezervacija">
+        <div class="row">
+          <h1 class="text-center">Rezervacija mesta Zaječar Svrljig</h1>
+          <h3 class="text-center">25.11.2021. 10:00-12:00</h3>
+          <h2 class="col-12">
+           1. Izaberite sedište <span class="izabrano">0</span>/<span class="ukupno">3</span>
+          </h2>
+          <div class="autobus-prikaz" data-putovanje_id='1'>
+            <div class="broj_reda">
+              1<br>2<br>3<br>
+            </div>
+            <div class="sedista">
+              <div class="red">
+                <div class="levo">
+                  <button type="button" class="sediste rezervisano" data-red="1" data-poz="1" disabled></button>
+                  <button type="button" class="sediste slobodno" data-red="1" data-poz="2" ></button>
+                </div>
+                <div class="desno">
+                  <button type="button" class="sediste slobodno" data-red="1" data-poz="3" ></button>
+                  <button type="button" class="sediste slobodno" data-red="1" data-poz="4" ></button>
+                </div>
+              </div>
+              <div class="red">
+                <div class="levo">
+                  <button type="button" class="sediste rezervisano" data-red="2" data-poz="1"  disabled></button>
+                  <button type="button" class="sediste slobodno"  data-red="2" data-poz="2" ></button>
+                </div>
+                <div class="desno">
+                  <button type="button" class="sediste slobodno" data-red="2" data-poz="3" ></button>
+                </div>
+              </div>
+              <div class="zadnji-red">
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="1" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="2" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="3" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="4" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="5" ></button>
+              </div>
+            </div>
+          </div>
+          <h2 class="col-12">
+            2. Da li je ovo putovanje povratno?
+          </h2>
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input povratno" type="radio" name="povratno" value="da" id="da">
+              <label class="form-check-label" for="da">
+                Da
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input povratno" type="radio" name="povratno" value="ne" id="ne" checked>
+              <label class="form-check-label" for="ne">
+                Ne
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="datum_povratka" class="form-label">Datum povratka</label>
+            <input type="date" class="form-control datum_povratka" name="datum_povratka">
+            <label for="vreme_povratka" class="form-label">Vreme povratka</label>
+            <select name="vreme_povratka" class="form-control vreme_povratka" id="vreme_povratka">
+              <option value="2">10:20</option>
+              <option value="5">11:30</option>
+              <option value="7">12:40</option>
+            </select>
+          </div>
+          <h3>Odaberite sedišta za povratno putovanje</h3>
+          <div class="autobus-prikaz povratno" data-putovanje_id='1'>
+            <div class="broj_reda">
+              1<br>2<br>3<br>
+            </div>
+            <div class="sedista">
+              <div class="red">
+                <div class="levo">
+                  <button type="button" class="sediste rezervisano" data-red="1" data-poz="1" disabled></button>
+                  <button type="button" class="sediste slobodno" data-red="1" data-poz="2" ></button>
+                </div>
+                <div class="desno">
+                  <button type="button" class="sediste slobodno" data-red="1" data-poz="3" ></button>
+                  <button type="button" class="sediste slobodno" data-red="1" data-poz="4" ></button>
+                </div>
+              </div>
+              <div class="red">
+                <div class="levo">
+                  <button type="button" class="sediste rezervisano" data-red="2" data-poz="1"  disabled></button>
+                  <button type="button" class="sediste slobodno"  data-red="2" data-poz="2" ></button>
+                </div>
+                <div class="desno">
+                  <button type="button" class="sediste slobodno" data-red="2" data-poz="3" ></button>
+                </div>
+              </div>
+              <div class="zadnji-red">
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="1" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="2" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="3" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="4" ></button>
+                <button type="button" class="sediste slobodno"  data-red="3" data-poz="5" ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="./public/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="../public/js/app.js"></script>
+  </body>
+</html>

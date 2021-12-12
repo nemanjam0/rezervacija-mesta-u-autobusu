@@ -1,0 +1,111 @@
+body
+{
+    min-height:2000px;
+}
+#hero-container
+{
+    background: url('../../images/hero.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+    min-width: 100%;
+    min-height:400px;
+    background-position:right;
+    height:auto;
+    position:relative;
+    display:flex;
+    justify-content: center;
+    align-items: flex-end;
+    .menu-container
+    {
+        background-color:white;
+        margin-bottom: -30px;
+        padding:1rem;
+        box-shadow:$box-shadow;
+    }
+    .swap
+    {
+        position: absolute;
+        bottom:10px;
+        left:100%;
+        border:0;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        &:hover
+        {
+            color:red;
+        }
+    }
+}
+.polasci
+{
+    .polazak
+    {
+        background-color: white;
+        padding:.5rem 1rem;
+        border:1px solid black;
+        box-shadow: $box-shadow;
+        transition: transform .4s;
+        margin-bottom: .5rem;
+        &:hover
+        {
+            transform:scale(1.05);
+            transition: transform .4s;
+        }
+        .karta-btn
+        {
+            @extend %primary-btn;
+
+        }
+    }
+}
+.autobus-prikaz
+{
+    display:flex;
+    flex-direction: row;
+    .broj_reda
+    {
+        padding-right: 1rem;
+    }
+    .sedista
+    {
+        .sediste
+        {
+            border:0;
+            background: url("../../images/sedista.png") no-repeat scroll -1px 0 transparent;
+            height: 21px;
+            width: 25px;
+            text-align: center;
+            &.slobodno
+            {
+                &:hover,&.cekanje
+                {
+                    background-position: -26px -0px;
+                }
+            }
+            &.moja-rezervacija
+            {
+                background-position: -78px -0px;
+            }
+            
+            &.rezervisano
+            {
+                background-position: -52px -0px;
+                cursor:unset;
+                &:hover
+                {
+                    background-position: -52px -0px;//kako bi smo ugasili hover koji se podrazumeva za druge slucajeve
+                }
+            }
+        }
+        .red
+        {
+            max-width: 150px;
+            display:flex;
+            justify-content: space-between;
+        }
+    }
+}
+.primary-btn
+{
+    @extend %primary-btn;
+}
