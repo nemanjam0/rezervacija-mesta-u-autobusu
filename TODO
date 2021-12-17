@@ -1,0 +1,3 @@
+Odradi foreign keyove
+Napravi asocijacije modela
+Prepravi dodavanje pozanih entiteta da bude povezano https://sequelize.org/master/manual/creating-with-associations.html

@@ -17,6 +17,10 @@ module.exports = {
       cena_karte: {
         type: Sequelize.FLOAT
       },
+      povratna: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       platio: {
         allowNull: false,
         type: Sequelize.BOOLEAN

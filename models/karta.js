@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     polazak_id: DataTypes.INTEGER,
     korisnik_id: DataTypes.INTEGER,
     cena_karte: DataTypes.FLOAT,
+    povratna:DataTypes.BOOLEAN,
     platio:DataTypes.BOOLEAN,
 
   }, {

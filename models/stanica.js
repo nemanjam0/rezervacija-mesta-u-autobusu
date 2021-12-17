@@ -14,10 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Stanica.init({
-    ruta_id: DataTypes.INTEGER,
+    red_voznje_id: DataTypes.INTEGER,
     destinacija_id: DataTypes.INTEGER,
     redni_broj: DataTypes.INTEGER,
-    broj_minuta_od_pocetka: DataTypes.INTEGER
+    broj_minuta_od_pocetka: DataTypes.INTEGER,
+    broj_km_od_pocetka: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Stanica',

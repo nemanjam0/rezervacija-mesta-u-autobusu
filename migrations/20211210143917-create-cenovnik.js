@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ruta_id: {
+      red_voznje_id: {
         type: Sequelize.INTEGER
       },
       pocetna_destinacija_id: {
@@ -17,7 +17,10 @@ module.exports = {
       krajnja_destinacija_id: {
         type: Sequelize.INTEGER
       },
-      cena_karte: {
+      cena_jedan_smer: {
+        type: Sequelize.FLOAT
+      },
+      cena_povratna: {
         type: Sequelize.FLOAT
       },
       vreme_kreiranja: {

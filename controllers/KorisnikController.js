@@ -18,7 +18,7 @@ module.exports.prijavi_korisnika=async (req,res)=>//POST tj prijava
 {
     var email=req.body.email;
     var lozinka=req.body.lozinka;
-    if(Redirect.backIfUndefined(req,res,email,lozinka))//ako vrati true znaci da je uradio redirect i poslao response,time prekidamo izvrsenje logike ispod posto podaci nisu validni tj. nisu svi podaci uneti
+    if(Redirect.backIfUndefinedOrEmpty(req,res,email,lozinka))//ako vrati true znaci da je uradio redirect i poslao response,time prekidamo izvrsenje logike ispod posto podaci nisu validni tj. nisu svi podaci uneti
     {
         return;
     }
@@ -46,7 +46,7 @@ module.exports.registracija=(req,res)=>//stranica
 }
 module.exports.registruj=async (req,res)=>//POST/registracija
 {
-    korisnik=await Korisnik.create({ime:req.body.ime,prezime:req.body.prezime,broj_telefona:req.body.broj_telefona,email:req.body.email,sifra:req.body.sifra,tip_naloga:'korisnik'})
+    var korisnik=await Korisnik.create({ime:req.body.ime,prezime:req.body.prezime,broj_telefona:req.body.broj_telefona,email:req.body.email,sifra:req.body.sifra,tip_naloga:'korisnik'})
     .catch((err)=>
     {
         Redirect.backWithValidationErrors(req,res,err)

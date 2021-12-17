@@ -12,7 +12,7 @@ module.exports.sacuvaj=async (req,res)=>//cuva novokreiranu destinaciju
     var logo_url=req.file ? req.file.path : undefined;//provera pre nego sto pokusamo da pristupimo svojstvu nepostojeceg objekta
     var naziv=req.body.naziv;
     var opis=req.body.opis;
-    if(Redirect.backIfUndefined(req,res,naziv,opis,logo_url))
+    if(Redirect.backIfUndefinedOrEmpty(req,res,naziv,opis,logo_url))
     {
         return;
     }
@@ -45,7 +45,7 @@ module.exports.promeni=(req,res)=>//cuva izmene
     var opis=req.body.opis;
     var id=req.params.id;
     var izmene={naziv:naziv,opis:opis};
-    if(Redirect.backIfUndefined(req,res,naziv,opis,id))
+    if(Redirect.backIfUndefinedOrEmpty(req,res,naziv,opis,id))
     {
         return;
     }

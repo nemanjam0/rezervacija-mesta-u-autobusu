@@ -11,7 +11,7 @@ module.exports.sacuvaj=async (req,res)=>//cuva novokreiranu destinaciju
 {
     var naziv=req.body.naziv;
     var cena_peronske=req.body.cena_peronske;
-    if(Redirect.backIfUndefined(req,res,naziv,cena_peronske))
+    if(Redirect.backIfUndefinedOrEmpty(req,res,naziv,cena_peronske))
     {
         return;
     }
@@ -42,7 +42,7 @@ module.exports.promeni=(req,res)=>//cuva izmene
     var naziv=req.body.naziv;
     var cena_peronske=req.body.cena_peronske
     var id=req.params.id;
-    if(Redirect.backIfUndefined(req,res,naziv,cena_peronske,id))
+    if(Redirect.backIfUndefinedOrEmpty(req,res,naziv,cena_peronske,id))
     {
         return;
     }

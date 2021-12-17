@@ -1,0 +1,35 @@
+<table class="table polasci">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Dan</th>
+        <th scope="col">Vreme</th>
+        <th scope="col">Smer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+       <td>
+         <select class="dan_polaska" name='dan_polaska[]' aria-label="">
+           <option value="-1" selected>Odaberi dan</option>
+           <option value="ponedeljak">Ponedeljak</option>
+           <option value="utorak">Utorak</option>
+           <option value="sreda">Sreda</option>
+           <option value="cetvrtak">Četvrtak</option>
+           <option value="petak">Petak</option>
+           <option value="subota">Subota</option>
+           <option value="nedelja">Nedelja</option>
+         </select>
+       </td>
+       <td>
+         <input type="time" name="vreme_polaska[]"/>
+       </td>
+       <td>
+         <select class="smer" name='smer[]' aria-label="">
+           <option value="-1" selected>Odaberi smer</option>
+           <option value="podrazumevani">Podrazumevani</option>
+           <option value="Obrnutni">Obrnuti</option>
+         </select>
+       </td>
+      </tr>
+    </tbody>
+  </table>

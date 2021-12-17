@@ -1,0 +1,23 @@
+extends ../layout
+block content  
+    .row.justify-content-center
+        .col-xs-12.col-md-6
+            h3 Dodaj novi autobus
+            form(action='/autobus/kreiraj' method='POST')
+                .form-group
+                    label(for='naziv') Naziv
+                    input#naziv.form-control(type='text' name='naziv' value=locals.old('naziv'))
+                .form-group
+                    label(for='broj_redova') Broj redova
+                    input#broj_redova.form-control(type='number' name='broj_redova' value=locals.old('broj_redova'))
+                .form-group
+                    label(for='broj_sedista_levo') Broj sedišta levo
+                    input#broj_sedista_levo.form-control(type='number' name='broj_sedista_levo' value=locals.old('broj_sedista_levo'))
+                .form-group
+                    label(for='broj_sedista_desno') Broj sedišta desno
+                    input#broj_sedista_desno.form-control(type='number' name='broj_sedista_desno' value=locals.old('broj_sedista_desno'))
+                .form-group
+                    label(for='broj_sedista_u_zadnjem_redu') Broj sedišta u zadnjem redu
+                    input#broj_sedista_u_zadnjem_redu.form-control(type='number' name='broj_sedista_u_zadnjem_redu' value=locals.old('broj_sedista_u_zadnjem_redu'))
+                .form-group
+                    button.btn.btn-primary(type='submit') Kreiraj

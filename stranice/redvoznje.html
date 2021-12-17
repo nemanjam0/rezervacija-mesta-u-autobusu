@@ -1,42 +1,11 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../public/css/sass/main.css">
-    <title>Rezervacija autobuskih karata</title>
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button type="button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Strana 1</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Strana 2</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Strana 3</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Strana 4</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-      <form class="container rezervacija">
+
+      <form class="container red-voznje" action='http://localhost:5000/redvoznje/kreiraj' method='POST'>
         <div class="row">
           <h1 class="text-center">Kreiranje novog reda vožnje</h1>
          <div class="col-6">
+          <div class="alert alert-warning">
+            Povratno putovanje morate posebno kreirati kao novi red vožnje
+          </div>
           <h2>
             1. Odaberite dane i vreme polazaka</span>
            </h2>
@@ -65,45 +34,69 @@
              </tbody>
            </table>
            <div class="form-group">
-            <label for="vreme">Vreme polaska</label>
-            <input class="form-control" id="vreme" type="time" name="vreme" value="12:00" />
+            <label for="vreme_polaska">Vreme polaska</label>
+            <input class="form-control" id="vreme_polaska" type="time" name="vreme_polaska" value="12:00" />
            </div>
-           
-           
            <h2>
-             2. Odaberi stanice na kojima staje autobus
+             2. Odaberi prevoznika
            </h2>
-          <div class="stanice-lista">
-            <div class="stanice-group">
-              <span class="redni-br">1.</span>
-              <select class="stanice" name='stanice[]' aria-label="">
-                <option value="-1" selected>Odaberi stanicu</option>
-                <option value="1">Zaječar</option>
-                <option value="2">Niš</option>
-                <option value="3">Beograd</option>
-                <option value="4">Ćuprija</option>
-                <option value="5">Jagodina</option>
-                <option value="6">Paraćin</option>
-              </select>
-              <button class="obrisi-btn">Obriši</button>
-            </div>
-          </div>
+           <select class="prevoznik" name='prevoznik' aria-label="">
+            <option value="-1" selected>Odaberi prevoznika</option>
+            <option value="1">Nis ekspres</option>
+            <option value="2">Bor travel</option>
+          </select>
           <h2>
-            3. Popuni cenovnik
+            3.Odaberi autobus
           </h2>
-          <div class="cenovnik">
+            <select class="autobus" name='autobus' aria-label="">
+              <option value="-1" selected>Odaberi autobus</option>
+              <option value="1">Mali</option>
+              <option value="2">Veliki</option>
+            </select>
+           <h2>
+            4. Rok važenja reda vožnje
+          </h2>
+           <input type="date" name="rok_vazenja" value="2021-01-01">
+           <h2>
+             5. Odaberi stanice na kojima staje autobus
+           </h2>
+          <table class="table table-bordered table-striped stanice-lista">
+            <thead>
+              <th>Redni broj</th>
+              <th>Stanica</th>
+              <th>Minuti od početne</th>
+              <th>Kilometri od početne</th>
+              <th>Akcije</th>
+            </thead>
+            <tbody>
+              <tr class="stanice-group">
+                <td class="redni-br">1.</td>
+                <td>
+                  <select class="stanice" name='stanice[]' aria-label="">
+                    <option value="-1" selected>Odaberi stanicu</option>
+                    <option value="1">Zaječar</option>
+                    <option value="2">Niš</option>
+                    <option value="3">Beograd</option>
+                    <option value="4">Ćuprija</option>
+                    <option value="5">Jagodina</option>
+                    <option value="6">Paraćin</option>
+                  </select>
+                </td>
+                <td><input type="number" name="vreme[]"></td>
+                <td><input type="number" name=kilometri[]></td>
+                <td><button class="obrisi-btn">Obriši</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <h2>
+            6. Popuni cenovnik
+          </h2>
+          <div class="cenovnik" id="cenovnik">
             <button class="btn btn-primary btn-cenovnik" id="cenovnik-btn" type="button">Započni</button>
             <div class="alert alert-warning">Kada započnete popunjavanje cenovnika više nećete biti u mogućnosti da menjate stanice</div>
-          
           </div>
-
+          <input class="btn btn-primary" type="submit" value="Dodaj novi red vožnje"/>
          </div>
         </div>
       </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="./public/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="../public/js/app.js"></script>
-  </body>
-</html>
+   

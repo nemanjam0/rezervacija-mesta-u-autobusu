@@ -14,9 +14,6 @@ module.exports = {
       rok_vazenja: {
         type: Sequelize.DATEONLY
       },
-      ruta_id: {
-        type: Sequelize.INTEGER
-      },
       prevoznik_id: {
         type: Sequelize.INTEGER
       },

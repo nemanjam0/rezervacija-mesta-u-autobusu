@@ -14,8 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   RedVoznje.init({
-    naziv: DataTypes.STRING,
-    ruta_id: DataTypes.INTEGER,
+    naziv:
+    {
+      type:DataTypes.STRING,
+      validate:
+      {
+        len:{
+          args:[3,40],
+          msg:"Ime mora imati između 3 i 40 karaktera",
+        }
+      
+      }
+    },
     prevoznik_id: DataTypes.INTEGER,
     rok_vazenja:DataTypes.DATEONLY,
     vreme_polaska: DataTypes.TIME,

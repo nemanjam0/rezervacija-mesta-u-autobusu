@@ -4,8 +4,11 @@ const korisnik_rute=require('./routes/korisnici');
 const destinacija_rute=require('./routes/destinacija');
 const prevoznik_rute=require('./routes/prevoznik');
 const pocetne_rute=require('./routes/pocetne');
+const autobus_rute=require('./routes/autobus');
+const redvoznje_rute=require('./routes/redvoznje');
 const parser = require('body-parser');
 const session = require('express-session')
+const polazakService=require('./services/polazakService')
 const app=express();
 app.use(express.static('public'))
 app.use(parser.urlencoded({ extended: true }));
@@ -41,6 +44,13 @@ app.use('/',function (req, res, next) {
 app.use('/',pocetne_rute)
 app.use('/destinacija',destinacija_rute)
 app.use('/prevoznik',prevoznik_rute)
+app.use('/redvoznje',redvoznje_rute);
+app.use('/autobus',autobus_rute);
+app.get('/t',(req,res)=>
+{
+    polazakService.kreirajPolaskeZaRedVoznje(1,1,'12:00','2021-12-27',1,1,0,1,1,1,0);
+    res.end('ucitano');
+})
 app.get('/start',(req,res)=>
 {
     req.session.data=Math.floor(Math.random() * 10000)

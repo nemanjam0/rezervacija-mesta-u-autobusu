@@ -22,6 +22,7 @@
             stanice:document.querySelectorAll('.stanice'),
             staniceLista:document.querySelector('.stanice-lista'),
             cenovnikBtn:document.querySelector('#cenovnik-btn'),
+            cenovnik:document.querySelector('#cenovnik'),
         }
         postaviDanasnjiDatum();
         setEventListeners();
@@ -49,23 +50,32 @@
         function izabranaStanica(event)
         {
             var odabrano=event.target.getAttribute('odabrano');
-            if(odabrano==null)//znaci da pre toga nije bila birana stanica iz tog select boxa
+            if(odabrano==null && typeof event.target.selectedIndex!='undefined')//znaci da pre toga nije bila birana stanica iz tog select boxa
             {
-                var nova_stanica=event.target.parentNode.cloneNode(true);
+                var nova_stanica=event.target.parentNode.parentNode.cloneNode(true);
                 var redni_broj=nova_stanica.querySelector('.redni-br')
-                dom.staniceLista.appendChild(nova_stanica);
+                nova_stanica.querySelectorAll('input').forEach((el)=>el.readOnly=false);
+                dom.staniceLista.querySelector('tbody').appendChild(nova_stanica);
                 redni_broj.innerHTML=(parseInt(redni_broj.innerHTML.replace('.',''))+1)+'.';
                 nova_stanica.addEventListener('change',izabranaStanica);
-
+                event.target.setAttribute('odabrano','1')
                 
             }
-            event.target.setAttribute('odabrano','1')
             //console.log(event.target.value);
         }
         function ucitajCenovnik()
         {
+            dom.cenovnik.innerHTML="";//brise dugme za ucitavanje cenvovnika i informacije pre nego sto ucita cenovnik
             var stanice=izvuciStanice();
             nacrtajTabeluZaCenovnik(stanice)
+            zabraniIzborStanica();
+        }
+        function zabraniIzborStanica()
+        {
+            document.querySelectorAll('.stanice').forEach((stanica)=>
+            {
+                stanica.style.pointerEvents='none';
+            })
         }
         function izvuciStanice()
         {
@@ -77,7 +87,13 @@
                 var naziv=stanica.options[stanica.selectedIndex].innerHTML;
                 var obj={stanica_id:stanica.value,naziv_stanice:naziv};
                 if(stanica.value!=-1)
-                stanice.push(obj);
+                {
+                    stanice.push(obj);
+                }
+                else
+                {
+                    stanica.closest('tr').remove();//kada generisemo cenovnik brisemo sve elemente koji sadrze ne izabranu stanicu(placeholder)
+                }
             });
             return stanice;
         }
@@ -90,7 +106,7 @@
             tabela.classList.add('table-bordered');
             tabela.classList.add('table-striped');
             document.querySelector('.cenovnik').append(tabela);
-            for(var i=0;i<stanice.length+1;i++)
+            for(var i=0;i<stanice.length;i++)
             {
                 var red=document.createElement('tr')
                 tbody.append(red)
@@ -98,7 +114,7 @@
                 {
                     if(i==0 && j==0)
                     {
-                        var polje=document.createElement('th')
+                        var polje=document.createElement('td')
                         red.append(polje);
                     }
                     else if(i==0)
@@ -115,14 +131,20 @@
                     }
                     else
                     {
-                        var polje=document.createElement('th')
+                        var polje=document.createElement('td')
                         if(i>j)
                         {
-                            polje.innerHTML=""
+                            polje.classList.add('text-center')
+                            polje.innerHTML="<strong>X</strong>"
+                            console.log(i,j);
                         }
                         else
                         {
-                            polje.innerHTML="x"
+                            var pocetna_stanica=stanice[i-1].stanica_id;
+                            var krajnja_stanica=stanice[j].stanica_id;
+                            var unosJedanSmer=`<input type="number" name="karta_${pocetna_stanica}_${krajnja_stanica}[jedan_smer]" placeholder="Jedan smer">`
+                            var unosPovratna=`<input type="number" name="karta_${pocetna_stanica}_${krajnja_stanica}[povratna]" placeholder="Povratna">`
+                            polje.innerHTML=unosJedanSmer+unosPovratna;
                         }
                         red.append(polje);
                     }

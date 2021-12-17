@@ -14,10 +14,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Cenovnik.init({
-    ruta_id: DataTypes.INTEGER,
+    red_voznje_id: DataTypes.INTEGER,
     pocetna_destinacija_id: DataTypes.INTEGER,
     krajnja_destinacija_id: DataTypes.INTEGER,
-    cena_karte: DataTypes.FLOAT,
+    cena_jedan_smer: 
+    {
+      type:DataTypes.FLOAT,
+      validate:
+      {
+        isFloat:
+        {
+          args:true,
+          msg:"Cene karata mogu biti samo celi ili decimalni brojevi"
+        }
+      }
+    },
+    cena_povratna: DataTypes.FLOAT,
   }, {
     sequelize,
     modelName: 'Cenovnik',

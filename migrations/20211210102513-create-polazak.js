@@ -8,8 +8,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      polazak_obrazac_id: {
+      red_voznje_id: {
         type: Sequelize.INTEGER
+      },
+      autobus_id: {
+        type: Sequelize.INTEGER
+      },
+      vreme_polaska: {
+        allowNull:false,
+        type: Sequelize.DATE
       },
       vreme_kreiranja: {
         allowNull: false,

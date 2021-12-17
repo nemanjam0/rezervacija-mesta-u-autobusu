@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Polazak.init({
-    polazak_obrazac_id: DataTypes.INTEGER
+    vreme_polaska:DataTypes.DATE,
+    red_voznje_id: DataTypes.INTEGER,
+    autobus_id:DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Polazak',
