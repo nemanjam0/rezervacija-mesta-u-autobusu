@@ -1,8 +1,8 @@
 extends ../layout 
 block content
-    form.container.red-voznje(action='http://localhost:5000/redvoznje/kreiraj' method='POST')
+    form.container.red-voznje(action='http://localhost:5000/redvoznje/'+id+'/kopiraj' method='POST')
         .row
-            h1.text-center Kreiranje novog reda vožnje
+            h1.text-center Kopiranje reda vožnje
             .col-6
                 .alert.alert-warning
                     | Povratno putovanje morate posebno kreirati kao novi red vožnje
@@ -40,12 +40,13 @@ block content
                 .form-group
                     label(for='vreme_polaska') Vreme polaska
                     input.form-control(id='vreme_polaska' type='time' name='vreme_polaska' value='12:00')
+              
                 h2
-                    | 3. Odaberi prevoznika
-                select.prevoznik(name='prevoznik' aria-label='')
-                    option(value='-1' selected) Odaberi prevoznika
-                    each prevoznik in prevoznici
-                        option(value=prevoznik.id)=prevoznik.naziv
+                    | 3. Početak i kraj važenja reda vožnje
+                | Od&nbsp;
+                input(type='date' name='pocetak_vazenja' value=danasnji_datum)
+                | &nbsp; Do &nbsp;
+                input(type='date' name='rok_vazenja' value=danasnji_datum)
                 h2
                     | 4.Odaberi autobus
                 select.autobus(name='autobus' aria-label='')
@@ -53,35 +54,8 @@ block content
                     each autobus in autobusi
                         option(value=autobus.id)=autobus.naziv
                 h2
-                    | 5. Početak i kraj važenja reda vožnje
-                | Od&nbsp;
-                input(type='date' name='pocetak_vazenja' value=danasnji_datum)
-                | &nbsp; Do &nbsp;
-                input(type='date' name='rok_vazenja' value=danasnji_datum)
-                h2
-                    | 6. Odaberi stanice na kojima staje autobus
-                table.table.table-bordered.table-striped.stanice-lista
-                    thead
-                        th Redni broj
-                        th Stanica
-                        th Minuti od početne
-                        th Kilometri od početne
-                    tbody
-                        tr.stanice-group
-                            td.redni-br 1.
-                            td
-                                select.stanice(name='stanice[]' aria-label='')
-                                    option(value='-1' selected) Odaberi destinaciju
-                                    each destinacija in destinacije
-                                        option(value=destinacija.id)=destinacija.ime
-                            td
-                                input(type='number' name='vreme[]' readonly value="0")
-                            td
-                                input(type='number' name='kilometri[]' readonly value="0")
-                h2
-                    | 7. Popuni cenovnik
-                #cenovnik.cenovnik
-                    button#cenovnik-btn.btn.btn-primary.btn-cenovnik(type='button') Započni
-                    .alert.alert-warning Kada započnete popunjavanje cenovnika više nećete biti u mogućnosti da menjate stanice
+                    | 5. Obrni smer
+                input(type='checkbox' name='obrni_smer')
+                br
                 input.btn.btn-primary(type='submit' value='Dodaj novi red vožnje')
 

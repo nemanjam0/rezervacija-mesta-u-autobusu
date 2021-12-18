@@ -1,5 +1,5 @@
 const express=require('express');
-const {sequelize,Korisnik}=require('./models');
+const {sequelize,Korisnik,RedVoznje,Stanice,Polazak}=require('./models');
 const korisnik_rute=require('./routes/korisnici');
 const destinacija_rute=require('./routes/destinacija');
 const prevoznik_rute=require('./routes/prevoznik');
@@ -46,10 +46,11 @@ app.use('/destinacija',destinacija_rute)
 app.use('/prevoznik',prevoznik_rute)
 app.use('/redvoznje',redvoznje_rute);
 app.use('/autobus',autobus_rute);
-app.get('/t',(req,res)=>
+app.get('/t',async (req,res)=>
 {
-    polazakService.kreirajPolaskeZaRedVoznje(1,1,'12:00','2021-12-27',1,1,0,1,1,1,0);
-    res.end('ucitano');
+   var polasci=polazakService.kreirajPolaskeZaRedVoznje(1,1,'12:00','2021-12-01','2022-12-31',1,0,0,0,0,0,0);
+   var x=await Polazak.findByPk(720);
+   res.end(JSON.stringify(x));
 })
 app.get('/start',(req,res)=>
 {

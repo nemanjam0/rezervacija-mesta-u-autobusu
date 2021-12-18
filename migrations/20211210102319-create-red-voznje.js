@@ -11,6 +11,9 @@ module.exports = {
       naziv: {
         type: Sequelize.STRING
       },
+      pocetak_vazenja: {
+        type: Sequelize.DATEONLY
+      },
       rok_vazenja: {
         type: Sequelize.DATEONLY
       },

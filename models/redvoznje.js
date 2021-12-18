@@ -10,23 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.hasMany(models.Stanica,{
+        foreignKey:'red_voznje_id'
+      });
+      this.hasMany(models.Cenovnik,{
+       foreignKey:'red_voznje_id'
+     });
+      this.hasMany(models.Polazak,{
+       foreignKey:'red_voznje_id'
+     });
     }
   };
   RedVoznje.init({
-    naziv:
-    {
-      type:DataTypes.STRING,
-      validate:
-      {
-        len:{
-          args:[3,40],
-          msg:"Ime mora imati između 3 i 40 karaktera",
-        }
-      
-      }
-    },
+    naziv: DataTypes.STRING,
     prevoznik_id: DataTypes.INTEGER,
+    pocetak_vazenja:DataTypes.DATEONLY,
     rok_vazenja:DataTypes.DATEONLY,
     vreme_polaska: DataTypes.TIME,
     ponedeljak: DataTypes.BOOLEAN,
