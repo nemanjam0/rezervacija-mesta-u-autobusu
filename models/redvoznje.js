@@ -11,14 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.Stanica,{
-        foreignKey:'red_voznje_id'
+        foreignKey:'red_voznje_id',
+        as:'stanice'
       });
       this.hasMany(models.Cenovnik,{
-       foreignKey:'red_voznje_id'
+       foreignKey:'red_voznje_id',
+       as:'cenovnici'
      });
       this.hasMany(models.Polazak,{
-       foreignKey:'red_voznje_id'
+       foreignKey:'red_voznje_id',
+       as:'polasci'
      });
+     this.belongsTo(models.Prevoznik,{
+       foreignKey:'prevoznik_id',
+       as:'prevoznik'
+     })
     }
   };
   RedVoznje.init({

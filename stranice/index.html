@@ -37,7 +37,15 @@
         <div class="row w-75 menu-container pretraga align-items-end">
              <div class="col-3 position-relative">
                <label for="pocetna_lokacija" class="form-label">Od</label>
-               <input type="text" class="form-control pocetna-lokacija" id="pocetna_lokacija">
+               <select class="form-control pocetna-lokacija" name="pocetna_lokacija" id="pocetna_lokacija">
+                <option value="-1" selected>Odaberi destinacju</option>
+                <option value="1">Zaječar</option>
+                <option value="2">Niš</option>
+                <option value="3">Beograd</option>
+                <option value="4">Ćuprija</option>
+                <option value="5">Jagodina</option>
+                <option value="6">Paraćin</option>
+              </select>
                <button class="swap">
                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
                    <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
@@ -46,7 +54,16 @@
              </div>
              <div class="col-3">
                <label for="krajnja_lokacija" class="form-label">Do</label>
-               <input type="text" class="form-control krajnja-lokacija" id="krajnja_lokacija">
+              
+               <select class="form-control krajnja-lokacija" name='krajnja_lokacija'>
+                <option value="-1" selected>Odaberi destinaciju</option>
+                <option value="1">Zaječar</option>
+                <option value="2">Niš</option>
+                <option value="3">Beograd</option>
+                <option value="4">Ćuprija</option>
+                <option value="5">Jagodina</option>
+                <option value="6">Paraćin</option>
+              </select>
              </div>
              <div class="col-3">
               <label for="krajnja_lokacija" class="form-label">Polazak</label>
@@ -54,7 +71,7 @@
             </div>
             <div class="col-2">
               <label for="broj-putnika" class="form-label">Broj putnika</label>
-              <input type="number" min="0" value="1" class="form-control broj-putnika">
+              <input type="number" min="1" value="1" class="form-control broj-putnika">
             </div>
             <div class="col-1">
               <label for="pretraga" class="form-label"></label>

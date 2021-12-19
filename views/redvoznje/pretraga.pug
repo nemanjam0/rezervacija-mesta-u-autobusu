@@ -1,0 +1,54 @@
+
+extends ./../layout 
+block content 
+    form#hero-container.container(action='http://localhost:5000/redvoznje/pretraga' method='POST')
+        .row.w-75.menu-container.pretraga.align-items-end
+            .col-3.position-relative
+                label.form-label(for='pocetna_lokacija') Od
+                select#pocetna_lokacija.form-control.pocetna-lokacija(name='pocetna_lokacija')
+                    option(value='' selected='') Odaberi destinacju
+                    each destinacija in destinacije 
+                        option(value=destinacija.id selected=locals.old('pocetna_lokacija',-1)==destinacija.id)=destinacija.ime
+                button.swap
+                    svg.bi.bi-arrow-left-right(xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewbox='0 0 16 16')
+                    path(fill-rule='evenodd' d='M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z')
+            .col-3
+                label.form-label(for='krajnja_lokacija') Do
+                select.form-control.krajnja-lokacija(name='krajnja_lokacija')
+                    option(value='' selected='') Odaberi destinacju
+                    each destinacija in destinacije 
+                        option(value=destinacija.id selected=locals.old('krajnja_lokacija',-1)==destinacija.id)=destinacija.ime
+            .col-3
+                label.form-label(for='krajnja_lokacija') Polazak
+                input.form-control.datum-polaska(type='date' name="datum_polaska" value=locals.old('datum_polaska',danasnji_datum))
+            .col-2
+                label.form-label(for='broj-putnika') Broj putnika
+                input.form-control.broj-putnika(name="broj_putnika" type='number' min='1' value=locals.old('broj_putnika',1))
+            .col-1
+                label.form-label(for='pretraga')
+                input.pretraga-btn.btn.btn-md.bg-dark.text-light(type='submit' value='Pretraga')
+    .container.polasci.mt-5.d-flex.justify-content-center.polasci
+        
+        .row
+            .col-12
+                h1.text-center="Red vožnje "+cenovnici[0].pocetna_destinacija.ime+"-"+cenovnici[0].krajnja_destinacija.ime
+                h3.text-center=naziv_dana+" "+datum_polaska
+            if cenovnici
+                each cenovnik in cenovnici
+                    .row.d-flex.align-items-center.polazak
+                        .col-4
+                            -var vreme_polaska=dodajMinuteNaVreme(cenovnik.red_voznje.vreme_polaska,cenovnik.red_voznje.stanice[0].broj_minuta_od_pocetka)
+                            -var vreme_dolaska=dodajMinuteNaVreme(cenovnik.red_voznje.vreme_polaska,cenovnik.red_voznje.stanice[1].broj_minuta_od_pocetka)
+                            h3=vreme_polaska+"-"+vreme_dolaska
+                        .col-5
+                            h3=cenovnik.red_voznje.prevoznik.naziv
+                        .col-3.flex-column.d-flex
+                            button.karta-btn.pt-1.pb-1
+                                i.bi.bi-arrow-right &nbsp;
+                                span=cenovnik.cena_jedan_smer+cenovnik.pocetna_destinacija.cena_peronske
+                                |&nbsp;din.
+                            button.karta-btn.pt-1.pb-1.mt-2
+                                i.bi.bi-arrow-left-right &nbsp;
+                                span=cenovnik.cena_povratna+cenovnik.pocetna_destinacija.cena_peronske+cenovnik.krajnja_destinacija.cena_peronske
+                                |&nbsp;din.
+            

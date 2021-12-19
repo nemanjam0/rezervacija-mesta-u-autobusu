@@ -1,12 +1,14 @@
 const express=require('express');
-const {sequelize,Korisnik,RedVoznje,Stanice,Polazak}=require('./models');
+const {sequelize,Korisnik,RedVoznje,Stanica,Polazak,Cenovnik,Prevoznik}=require('./models');
 const korisnik_rute=require('./routes/korisnici');
 const destinacija_rute=require('./routes/destinacija');
+const moment=require('moment');
 const prevoznik_rute=require('./routes/prevoznik');
 const pocetne_rute=require('./routes/pocetne');
 const autobus_rute=require('./routes/autobus');
 const redvoznje_rute=require('./routes/redvoznje');
 const parser = require('body-parser');
+const {Op}=require('sequelize');
 const session = require('express-session')
 const polazakService=require('./services/polazakService')
 const app=express();
@@ -48,9 +50,7 @@ app.use('/redvoznje',redvoznje_rute);
 app.use('/autobus',autobus_rute);
 app.get('/t',async (req,res)=>
 {
-   var polasci=polazakService.kreirajPolaskeZaRedVoznje(1,1,'12:00','2021-12-01','2022-12-31',1,0,0,0,0,0,0);
-   var x=await Polazak.findByPk(720);
-   res.end(JSON.stringify(x));
+    res.end("TEST RUTA");
 })
 app.get('/start',(req,res)=>
 {

@@ -1,9 +1,100 @@
 const express=require('express')
 const {sequelize,RedVoznje,Prevoznik,Autobus,Destinacija,Cenovnik,Stanica,Polazak}=require('../models');
 const parser = require('body-parser');
+const moment=require('moment')
 const { redirect } = require('express/lib/response');
 const Redirect=require('./../helpers/Redirect');
+const {Op}=require('sequelize');
 const polazakService=require('./../services/polazakService');
+module.exports.pretragaPrikazi=async (req,res)=>//prikazuje dijalog za kreiranje nove destinacije
+{
+    const destinacije = await Destinacija.findAll();
+    const danasnji_datum=(new Date()).toISOString().split('T')[0];
+    res.render('redvoznje/pretraga',{destinacije:destinacije,danasnji_datum:danasnji_datum});
+}
+module.exports.rezultatiPretrage=async (req,res)=>//prikazuje dijalog za kreiranje nove destinacije
+{
+    var pocetna_destinacija_id=req.body.pocetna_lokacija;
+    var krajnja_destinacija_id=req.body.krajnja_lokacija;
+    var datum_polaska=moment(req.body.datum_polaska);
+    var datum_polaska_srpski_format=datum_polaska.format('DD.MM.YYYY.');
+    var broj_putnika=req.body.broj_putnika;
+    var dan_u_nedelji=datum_polaska.day()!=0 ? datum_polaska.day():datum_polaska.day()+7;//da bi nedelja bila 7. a ne 0. dan preglednije je
+    console.log(pocetna_destinacija_id,krajnja_destinacija_id,datum_polaska,broj_putnika);
+    const destinacije = await Destinacija.findAll();
+    console.log('old '+res.locals.old('datum_polaska'));
+    var uslov_red_voznje=
+    {
+        rok_vazenja:
+        {
+            [Op.gte]:datum_polaska,
+        },
+        pocetak_vazenja:
+        {
+            [Op.lte]:datum_polaska,
+        }
+    }
+    var naziv_dana="";
+    switch(dan_u_nedelji)
+    {
+        case 1: { uslov_red_voznje.ponedeljak=1; naziv_dana="Ponedeljak"; break;}
+        case 2: { uslov_red_voznje.utorak=1; naziv_dana="Utorak"; break;}
+        case 3: { uslov_red_voznje.sreda=1; naziv_dana="Sreda"; break;}
+        case 4: { uslov_red_voznje.cetvrtak=1; naziv_dana="Četvrtak"; break;}
+        case 5: { uslov_red_voznje.petak=1; naziv_dana="Petak"; break;}
+        case 6: { uslov_red_voznje.subota=1; naziv_dana="Subota"; break;}
+        case 7: { uslov_red_voznje.nedelja=1; naziv_dana="Nedelja"; break;}
+    }
+    var cenovnici=await Cenovnik.findAll({
+        where:
+        {
+            pocetna_destinacija_id:pocetna_destinacija_id,
+            krajnja_destinacija_id:krajnja_destinacija_id,
+        },
+        include:
+        [
+            {
+                model:RedVoznje,
+                include:
+                [{
+                    model:Stanica,
+                    as:'stanice', 
+                    where:
+                    {
+                        destinacija_id:
+                        {
+                            [Op.or]:[pocetna_destinacija_id,krajnja_destinacija_id]
+                        }
+                    }
+                },
+                {
+                    model:Prevoznik,
+                    as:'prevoznik', 
+                    
+                }],
+               
+                as:'red_voznje',
+                where:uslov_red_voznje
+            },
+            {
+                model:Destinacija,
+                as:'pocetna_destinacija'
+            },
+            {
+                model:Destinacija,
+                as:'krajnja_destinacija'
+            }
+             
+        ],
+        order: [[{model:RedVoznje,as:'red_voznje'},{model:Stanica,as:'stanice'},'redni_broj', 'asc']]
+        
+    })
+   var podaci={cenovnici:cenovnici};
+   //kreiraj metodu za dodavanje minuta na vreme i prosledi je u res.locals ili smesti u promenjivu koju ces da saljes kao parametar viewu
+   console.log("\n\n\n"); 
+   console.log(JSON.stringify(cenovnici));
+    res.render('redvoznje/pretraga',{naziv_dana:naziv_dana,datum_polaska:datum_polaska_srpski_format,destinacije:destinacije,cenovnici:cenovnici,dodajMinuteNaVreme:dodajMinuteNaVreme});
+}
 module.exports.kreiraj=async (req,res)=>//prikazuje dijalog za kreiranje nove destinacije
 {
     const prevoznici = Prevoznik.findAll();
@@ -191,4 +282,8 @@ module.exports.sacuvajkopiju=async (req,res)=>//cuva izmene
         return;
     }
     Redirect.backWithSuccess(req,res,"Novi red vožnje uspesno kreiran");
+}
+function dodajMinuteNaVreme(vreme,minuti)
+{
+    return moment('2021-12-12 '+vreme).add(minuti,'m').format('HH:mm');
 }

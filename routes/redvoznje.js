@@ -5,4 +5,6 @@ router.get('/kreiraj', redVoznjeController.kreiraj);
 router.post('/kreiraj', redVoznjeController.sacuvaj);
 router.get('/:id/kopiraj', redVoznjeController.kopiraj);
 router.post('/:id/kopiraj/', redVoznjeController.sacuvajkopiju);
+router.get('/pretraga', redVoznjeController.pretragaPrikazi);
+router.post('/pretraga', redVoznjeController.rezultatiPretrage);
 module.exports=router;

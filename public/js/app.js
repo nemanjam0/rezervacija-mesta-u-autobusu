@@ -24,7 +24,7 @@
             cenovnikBtn:document.querySelector('#cenovnik-btn'),
             cenovnik:document.querySelector('#cenovnik'),
         }
-        postaviDanasnjiDatum();
+        //postaviDanasnjiDatum();
         setEventListeners();
         function postaviDanasnjiDatum()
         {
@@ -44,8 +44,8 @@
         {
          dom.sedistaBtns.forEach((btn)=>btn.addEventListener('click',sedisteClick));
          dom.povratnoRadioBtns.forEach((btn)=>btn.addEventListener('click',povratnoClick));
-         dom.stanice.forEach((stanica)=>stanica.addEventListener('change',izabranaStanica));
-         dom.cenovnikBtn.addEventListener('click',ucitajCenovnik);
+         if(dom.stanice) dom.stanice.forEach((stanica)=>stanica.addEventListener('change',izabranaStanica));
+         if( dom.cenovnikBtn) dom.cenovnikBtn.addEventListener('click',ucitajCenovnik);
         }
         function izabranaStanica(event)
         {
