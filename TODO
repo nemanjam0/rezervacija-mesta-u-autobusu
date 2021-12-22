@@ -1,3 +1,4 @@
 Odradi foreign keyove
 Napravi asocijacije modela
 Prepravi dodavanje pozanih entiteta da bude povezano https://sequelize.org/master/manual/creating-with-associations.html
+REZERVISANA SEDISTA PAMTI KAO RED_SEDISTE_U_REDU,ali 2 cifre za red da bi moglo sortiranje stringa da radi lepo

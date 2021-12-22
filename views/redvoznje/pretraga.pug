@@ -31,9 +31,9 @@ block content
         
         .row
             .col-12
+            if cenovnici && Array.isArray(cenovnici) && cenovnici.length>0
                 h1.text-center="Red vožnje "+cenovnici[0].pocetna_destinacija.ime+"-"+cenovnici[0].krajnja_destinacija.ime
                 h3.text-center=naziv_dana+" "+datum_polaska
-            if cenovnici
                 each cenovnik in cenovnici
                     .row.d-flex.align-items-center.polazak
                         .col-4
@@ -43,12 +43,15 @@ block content
                         .col-5
                             h3=cenovnik.red_voznje.prevoznik.naziv
                         .col-3.flex-column.d-flex
-                            button.karta-btn.pt-1.pb-1
-                                i.bi.bi-arrow-right &nbsp;
-                                span=cenovnik.cena_jedan_smer+cenovnik.pocetna_destinacija.cena_peronske
-                                |&nbsp;din.
-                            button.karta-btn.pt-1.pb-1.mt-2
-                                i.bi.bi-arrow-left-right &nbsp;
-                                span=cenovnik.cena_povratna+cenovnik.pocetna_destinacija.cena_peronske+cenovnik.krajnja_destinacija.cena_peronske
-                                |&nbsp;din.
+                            -var enkodirano_vreme_polaska=encodeURIComponent(datum_polaska+' '+cenovnik.red_voznje.vreme_polaska)
+                            a(href='/rezervacija/prikaz/'+cenovnik.red_voznje_id+'/'+cenovnik.pocetna_destinacija_id+'/'+cenovnik.krajnja_destinacija_id+'/'+broj_putnika+'/'+enkodirano_vreme_polaska+'/jedansmer' target="_blank")
+                                button.karta-btn.pt-1.pb-1.w-100
+                                    i.bi.bi-arrow-right &nbsp;
+                                    span=cenovnik.cena_jedan_smer+cenovnik.pocetna_destinacija.cena_peronske
+                                    |&nbsp;din.
+                            a(href='/rezervacija/prikaz/'+cenovnik.red_voznje_id+'/'+cenovnik.pocetna_destinacija_id+'/'+cenovnik.krajnja_destinacija_id+'/'+broj_putnika+'/'+enkodirano_vreme_polaska+'/povratna')
+                                button.karta-btn.pt-1.pb-1.mt-2.w-100
+                                    i.bi.bi-arrow-left-right &nbsp;
+                                    span=cenovnik.cena_povratna+cenovnik.pocetna_destinacija.cena_peronske+cenovnik.krajnja_destinacija.cena_peronske
+                                    |&nbsp;din.
             

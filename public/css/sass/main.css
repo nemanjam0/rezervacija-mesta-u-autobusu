@@ -118,7 +118,7 @@ body {
 }
 
 .autobus-prikaz .sedista .red {
-  max-width: 150px;
+  min-width: 150px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

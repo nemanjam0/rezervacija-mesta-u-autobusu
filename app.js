@@ -7,10 +7,13 @@ const prevoznik_rute=require('./routes/prevoznik');
 const pocetne_rute=require('./routes/pocetne');
 const autobus_rute=require('./routes/autobus');
 const redvoznje_rute=require('./routes/redvoznje');
+const rezervacija_rute=require('./routes/rezervacija');
 const parser = require('body-parser');
 const {Op}=require('sequelize');
 const session = require('express-session')
 const polazakService=require('./services/polazakService')
+const cenovnikService=require('./services/cenovnikService')
+const {dodajMinuteNaVreme}=require('./helpers/Vreme');
 const app=express();
 app.use(express.static('public'))
 app.use(parser.urlencoded({ extended: true }));
@@ -48,9 +51,10 @@ app.use('/destinacija',destinacija_rute)
 app.use('/prevoznik',prevoznik_rute)
 app.use('/redvoznje',redvoznje_rute);
 app.use('/autobus',autobus_rute);
+app.use('/rezervacija',rezervacija_rute);
 app.get('/t',async (req,res)=>
 {
-    res.end("TEST RUTA");
+    
 })
 app.get('/start',(req,res)=>
 {
