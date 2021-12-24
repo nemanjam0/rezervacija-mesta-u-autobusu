@@ -1,27 +1,40 @@
 h2.col-12
-    | 1. Izaberite sedište 
+    | Izaberite sedište 
     span.izabrano 0
     | /
     span.ukupno=broj_putnika
-.autobus-prikaz(data-polazak_id=polazak.id data-pocetna_destinacija_id=pocetna_destinacija_id data-krajnja_destinacija_id=krajnja_destinacija_id)
+.autobus-prikaz(data-naziv_putovanja=naziv_putovanja data-polazak_id=polazak.id data-pocetna_destinacija_id=pocetna_destinacija_id data-krajnja_destinacija_id=krajnja_destinacija_id)
     .sedista
+        input(type='hidden' name='nazivi_putovanja[]',value=naziv_putovanja)
+        input(type='hidden' name=naziv_putovanja+'_pocetna_destinacija_id',value=pocetna_destinacija_id)
+        input(type='hidden' name=naziv_putovanja+'_krajnja_destinacija_id',value=krajnja_destinacija_id)
+        input(type='hidden' name=naziv_putovanja+'_polazak_id',value=polazak.id)
         -var br_reda=0
         while ++br_reda<autobus.broj_redova
-            -var br_reda_str=br_reda<autobus.broj_redova ? '0'+br_reda:br_reda
+            -var br_reda_str=br_reda<10 ? '0'+br_reda:br_reda
             .red
                 -var sediste_u_redu=1
                 .levo
                     span#br_reda=br_reda_str
                     |&nbsp;&nbsp;
                     while (sediste_u_redu)<=autobus.broj_sedista_levo
-                        button.sediste.rezervisano(type='button' data-red=br_reda data-poz=sediste_u_redu++ disabled='')
+                        if (br_reda.toString()+'_'+sediste_u_redu.toString()) in rezervisana_sedista
+                            input.sediste.rezervisano(type="button" data-red=br_reda data-poz=sediste_u_redu++ disabled='')
+                        else 
+                            input.sediste.slobodno(type="button" data-red=br_reda data-poz=sediste_u_redu++)
                 .desno
                     while sediste_u_redu<=autobus.broj_sedista_desno+autobus.broj_sedista_levo
-                        button.sediste.slobodno(type='button' data-red=br_reda data-poz=sediste_u_redu++)
+                        if (br_reda.toString()+'_'+sediste_u_redu.toString()) in rezervisana_sedista
+                            input.sediste.rezervisano(type="button" data-red=br_reda data-poz=sediste_u_redu++ disabled='')
+                        else 
+                            input.sediste.slobodno(type="button" data-red=br_reda data-poz=sediste_u_redu++)
     
         .zadnji-red
             span#br_reda=br_reda
             |&nbsp;&nbsp;
             -sediste_u_redu=0
             while sediste_u_redu++<autobus.broj_sedista_u_zadnjem_redu
-                button.sediste.slobodno(type='button' data-red=br_reda data-poz=sediste_u_redu)
+                if (br_reda.toString()+'_'+sediste_u_redu.toString()) in rezervisana_sedista
+                    input.sediste.rezervisano(type="button" data-red=br_reda data-poz=sediste_u_redu disabled='')
+                else 
+                    input.sediste.slobodno(type="button" data-red=br_reda data-poz=sediste_u_redu)

@@ -77,8 +77,9 @@ module.exports.nadjiZaDestinacijeIDatum=async (pocetna_destinacija_id,krajnja_de
             }
              
         ],
-        order: [[{model:RedVoznje,as:'red_voznje'},{model:Stanica,as:'stanice'},'redni_broj', 'asc']]
+        order: [[{model:RedVoznje,as:'red_voznje'},{model:Stanica,as:'stanice'},'redni_broj', 'asc'],[{model:RedVoznje,as:'red_voznje'},'vreme_polaska', 'asc']]
         
     })
+    console.log(cenovnici);
     return cenovnici;
 }

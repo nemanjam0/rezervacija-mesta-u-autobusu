@@ -1,6 +1,7 @@
 extends ../layout
-block content   
-    form.container.rezervacija
+block content
+    -var tip_putovanja=povratno?'povratno':'jedansmer'
+    form.container.rezervacija(action='/rezervacija/kreiraj/'+tip_putovanja method='POST')
         .row
             h1.text-center="Rezervacija mesta "+cenovnik.pocetna_destinacija.ime+"-"+cenovnik.krajnja_destinacija.ime
             -var polazak=dodajMinuteNaVreme(cenovnik.red_voznje.vreme_polaska,cenovnik.red_voznje.stanice[0].broj_minuta_od_pocetka);
@@ -17,3 +18,5 @@ block content
                 select#vreme_povratka.form-control.vreme_povratka(name='vreme_povratka' data-broj_putnika=broj_putnika)
                 div#vreme_poruka()
             div#povratno-autobus.autobus-wrapper
+        br
+        button.btn.btn-primary(type='submit') Rezerviši

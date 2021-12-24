@@ -1,29 +1,18 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('karte', {
+    await queryInterface.createTable('povratna_putovanja', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      polazak_id: {
+      prva_rezervacija_id: {
         type: Sequelize.INTEGER
       },
-      korisnik_id: {
+      povratak_id: {
         type: Sequelize.INTEGER
-      },
-      cena_karte: {
-        type: Sequelize.FLOAT
-      },
-      povratna: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN
-      },
-      platio: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN
       },
       vreme_kreiranja: {
         allowNull: false,
@@ -36,6 +25,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('karte');
+    await queryInterface.dropTable('povratna_putovanja');
   }
 };
