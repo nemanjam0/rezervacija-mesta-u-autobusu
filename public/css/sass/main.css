@@ -126,4 +126,12 @@ body {
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
+
+.rezervisano-greska, .istice-poruka, .zabranjena-poruka {
+  display: none;
+}
+
+.placanje-podaci {
+  display: none;
+}
 /*# sourceMappingURL=main.css.map */

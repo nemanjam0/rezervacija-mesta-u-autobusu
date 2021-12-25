@@ -33,6 +33,8 @@ module.exports = (sequelize, DataTypes) => {
     korisnik_id: DataTypes.INTEGER,
     pocetna_destinacija_id: DataTypes.INTEGER,
     krajnja_destinacija_id: DataTypes.INTEGER,
+    red: DataTypes.INTEGER,
+    mesto_u_redu: DataTypes.INTEGER,
     istek_rezervacije: DataTypes.DATE
   }, {
     sequelize,

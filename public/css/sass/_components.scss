@@ -109,3 +109,11 @@ body
 {
     @extend %primary-btn;
 }
+.rezervisano-greska,.istice-poruka,.zabranjena-poruka
+{
+    display:none;
+}
+.placanje-podaci
+{
+    display:none;
+}

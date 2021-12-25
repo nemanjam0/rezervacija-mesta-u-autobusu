@@ -105,14 +105,16 @@ module.exports.rezervisi=async (req,res)=>
     var povratak_krajnja_destinacija_id=req.body[povratak_naziv_putovanja+'_krajnja_destinacija_id'];
     var povratak_polazak_id=req.body[povratak_naziv_putovanja+'_polazak_id'];
     var povratak_sedista=req.body[povratak_naziv_putovanja+'_rezervacija'];
+    var korisnik_id=1;
+    var platio=req.body.placanje;
     if(tip_putovanja=='jedansmer')
     {
-        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,1,1,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista);
+        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista);
     }
     else
     {
-        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,1,1,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista);
-        var povratna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(povratak_polazak_id,1,1,povratak_pocetna_destinacija_id,povratak_krajnja_destinacija_id,povratak_sedista);
+        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista);
+        var povratna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(povratak_polazak_id,korisnik_id,platio,povratak_pocetna_destinacija_id,povratak_krajnja_destinacija_id,povratak_sedista);
         
         var povratak=await Povratak.create({
             prva_rezervacija_id:pocetna_rezervacija_id,
@@ -120,6 +122,44 @@ module.exports.rezervisi=async (req,res)=>
         })
     }
     Redirect.backWithSuccess(req,res,'Rezervacija uspešno kreirana');
-
+}
+module.exports.proveriRezervisanostSedista=async (req,res)=>
+{
+    var pocetna_destinacija_id=req.params.pocetna_destinacija_id;
+    var krajnja_destinacija_id=req.params.krajnja_destinacija_id;
+    var red=req.params.red;
+    var mesto_u_redu=req.params.mesto_u_redu;
+    var polazak_id=req.params.polazak_id;
+    var sediste=await rezervacijaService.prikaziZauzetaSediste(polazak_id,pocetna_destinacija_id,krajnja_destinacija_id,red,mesto_u_redu);
+    var odg;
+    if(Object.keys(sediste).length==0)
+    {
+        odg=JSON.stringify({sediste:`${red}_${mesto_u_redu}`,zauzeto:0});
+    }
+    else
+    {
+        odg=JSON.stringify({sediste:`${red}_${mesto_u_redu}`,zauzeto:1});
+    }
+    console.log(odg);
+    res.send(odg);
+}
+module.exports.privremenoRezervisi=async (req,res)=>
+{
+    var pocetna_destinacija_id=req.params.pocetna_destinacija_id;
+    var krajnja_destinacija_id=req.params.krajnja_destinacija_id;
+    var red=req.params.red;
+    var mesto_u_redu=req.params.mesto_u_redu;
+    var vreme_isteka=decodeURIComponent(req.params.vreme_isteka);
+    var polazak_id=req.params.polazak_id;
+    var korisnik_id=1;
+    var sediste=await rezervacijaService.privremenoRezervisi(polazak_id,korisnik_id,pocetna_destinacija_id,krajnja_destinacija_id,red,mesto_u_redu,vreme_isteka)
+    console.log(sediste.id);
+    res.send({id:sediste.id});
+}
+module.exports.privremenoObrisi=async(req,res)=>
+{
+    var id=req.params.privremeno_sediste_id;
+    await rezervacijaService.obrisiPrivremeno(id);
+    res.end();
 }
 

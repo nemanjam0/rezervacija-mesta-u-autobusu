@@ -7,9 +7,32 @@ block content
             -var polazak=dodajMinuteNaVreme(cenovnik.red_voznje.vreme_polaska,cenovnik.red_voznje.stanice[0].broj_minuta_od_pocetka);
             -var dolazak=dodajMinuteNaVreme(cenovnik.red_voznje.vreme_polaska,cenovnik.red_voznje.stanice[1].broj_minuta_od_pocetka)
             h3.text-center=datum_polaska_srpski_format+" "+polazak+"-"+dolazak
-        div#autobus_jedansmer.autobus-wrapper(data-broj_putnika=broj_putnika data-red_voznje_id=cenovnik.red_voznje_id data-datum_polaska=datum_polaska data-vreme_polaska=cenovnik.red_voznje.vreme_polaska data-pocetna_destinacija_id=cenovnik.pocetna_destinacija.id data-krajnja_destinacija_id=cenovnik.krajnja_destinacija.id data-vreme_polaska_sa_prve_stanice=vreme_polaska_sa_prve_stanice)
-                
-                        
+        .alert.alert-warning.istice-poruka
+        .placanje 
+            h2 Da li plaćate karte odmah?
+            input(type='radio' name="placanje" class='placanje' value='1')
+            |Da
+            br
+            input(type='radio' name="placanje"  class='placanje' value='0' checked)
+            |Ne
+            .placanje-podaci.col-3 
+                .form-group
+                    label(for='ime_na_kartici') Ime na kartici
+                    input#broj_sedista_levo.form-control(type='text' name='ime_na_kartici')
+                br
+                .form-group
+                    label(for='broj_kartice') Broj kartice
+                    input#broj_sedista_levo.form-control(type='text' name='broj_kartice')
+                br
+                .form-group
+                    label(for='CVC') CVC
+                    input#broj_sedista_levo.form-control(type='text' name='CVC')
+                br
+                .form-group
+                    label(for='vreme_isteka') Važi do
+                    input#broj_sedista_levo.form-control(type='text' name='vreme_isteka')
+                br
+        div#autobus_jedansmer.autobus-wrapper(data-broj_putnika=broj_putnika data-red_voznje_id=cenovnik.red_voznje_id data-datum_polaska=datum_polaska data-vreme_polaska=cenovnik.red_voznje.vreme_polaska data-pocetna_destinacija_id=cenovnik.pocetna_destinacija.id data-krajnja_destinacija_id=cenovnik.krajnja_destinacija.id data-vreme_polaska_sa_prve_stanice=vreme_polaska_sa_prve_stanice)           
         if povratno                
             .col-3
                 label.form-label(for='datum_povratka') Datum povratka
@@ -19,4 +42,6 @@ block content
                 div#vreme_poruka()
             div#povratno-autobus.autobus-wrapper
         br
-        button.btn.btn-primary(type='submit') Rezerviši
+        .alert.alert-danger.zabranjena-poruka
+            |Vreme za rezervaciju je isteklo.Možete ponovo započeti rezervaciju osvežavanjem stranice.
+        button#submit-btn.btn.btn-primary(type='submit') Rezerviši

@@ -20,6 +20,12 @@ module.exports = {
       krajnja_destinacija_id: {
         type: Sequelize.INTEGER
       },
+      red: {
+        type: Sequelize.INTEGER
+      },
+      mesto_u_redu: {
+        type: Sequelize.INTEGER
+      },
       istek_rezervacije: {
         allowNull: false,
         type: Sequelize.DATE

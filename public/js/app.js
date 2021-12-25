@@ -1,3 +1,4 @@
+
 (function()
 {
     window.addEventListener('load',function()
@@ -6,6 +7,7 @@
         init();
     });
     const host='http://localhost:5000'
+ 
     function init()
     {
         const dom=
@@ -26,24 +28,10 @@
             datumPovratka:document.querySelector('#datum_povratka'),
             vremePovratka:document.querySelector("#vreme_povratka"),
             povratnoAutobus:document.querySelector('#povratno-autobus'),
-            autobusJedanSmerWrapper:document.querySelector("#autobus_jedansmer")
+            autobusJedanSmerWrapper:document.querySelector("#autobus_jedansmer"),
+            placanjeRadioBtns:document.querySelectorAll('.placanje')
         }
-        //postaviDanasnjiDatum();
         setEventListeners();
-        function postaviDanasnjiDatum()
-        {
-            const danasnjiDatum=moment().format('Y-M-D');
-            if(dom.pretragaDatum)
-            {
-                dom.pretragaDatum.min=danasnjiDatum;
-                dom.pretragaDatum.value=danasnjiDatum;
-            }
-            if(dom.datumPovratka)
-            {
-                dom.datumPovratka.min=danasnjiDatum;
-                dom.datumPovratka.value=danasnjiDatum;
-            }
-        }
         function ucitajAutobus(wrapper)
         {
             console.log(wrapper);
@@ -53,8 +41,7 @@
             }).then(function (html) {
             
                 wrapper.innerHTML=html;
-                postaviEventeZaAutobus(wrapper);
-            
+                postaviEventeZaAutobus(wrapper);  
             })
         }
         function postaviEventeZaAutobus(wrapper)
@@ -78,6 +65,27 @@
          }
          if(dom.vremePovratka) dom.vremePovratka.addEventListener('change',odabranoVremePovratka);
          if(dom.autobusJedanSmerWrapper) ucitajAutobus(dom.autobusJedanSmerWrapper)
+         if(dom.placanjeRadioBtns) dom.placanjeRadioBtns.forEach((btn)=>
+         {
+             btn.addEventListener('change',placanjePrikaz)
+         })
+        }
+        function placanjePrikaz(event)
+        {
+            dom.placanjeRadioBtns.forEach((btn)=>
+            {
+                if(btn.checked)
+                {
+                    if(btn.value==1)
+                    {
+                        document.querySelector('.placanje-podaci').style.display='block';
+                    }
+                    else
+                    {
+                        document.querySelector('.placanje-podaci').style.display='none';
+                    }
+                }
+            })
         }
         function odabranoVremePovratka(event)
         {
@@ -233,35 +241,22 @@
             }
         }
         function sedisteClick(event)
-        {
+        {    
             const red=event.target.dataset.red;
             const poz=event.target.dataset.poz;
-            
+
             if(event.target.classList.contains('slobodno'))
             {
                 if(proveriDozvoljenostRezervacije(event.target))
                 {
-                    if(proveriDostupnostSedistaIRezervisi(red,poz))
-                    {
-                        povecajBrojRezervisanihSedista(event.target);
-                        event.target.classList.add('moja-rezervacija');
-                        event.target.classList.remove('slobodno');
-                        var input = document.createElement("input");
-                        var naziv_putovanja=event.target.closest('.autobus-wrapper').querySelector('.autobus-prikaz').dataset.naziv_putovanja;
-                        console.log(naziv_putovanja);
-                        input.setAttribute("type", "hidden");
-                        input.setAttribute("name", naziv_putovanja+'_rezervacija[]');
-                        input.setAttribute("value", red+"_"+poz);
-                        event.target.appendChild(input);
-
-                    }
+                    proveriDostupnostSedistaIRezervisi(event.target)
                 }
             }
             else if(event.target.classList.contains('moja-rezervacija'))
             {
                 const red=event.target.dataset.red;
                 const poz=event.target.dataset.poz;
-                obrisiRezervisanoSediste(red,poz)
+                obrisiRezervisanoSediste(event.target.dataset.id)
                 smanjiBrojRezervisanihSedista(event.target);
                 event.target.querySelector('input[type="hidden"]').remove();
                 event.target.classList.remove('moja-rezervacija');
@@ -269,9 +264,11 @@
             }
             
         }
-        function obrisiRezervisanoSediste(red,poz)
+        function obrisiRezervisanoSediste(id)
         {
-
+            fetch(host+`/rezervacija/obrisiprivremeno/${id}`,{
+                method:'POST'
+            });
         }
         function povecajBrojRezervisanihSedista(sediste)
         {
@@ -294,9 +291,92 @@
             const br_dozvoljenih=parseInt(ukupnoDozvoljenih.innerText);
             return br_izabranih<br_dozvoljenih;
         }
-        function proveriDostupnostSedistaIRezervisi(red,pozicija)
+        function proveriDostupnostSedistaIRezervisi(sediste)
         {
-            return true;
+            const red=sediste.dataset.red;
+            const poz=sediste.dataset.poz;
+            var autobus=sediste.closest('.autobus-prikaz');
+            var polazak_id=autobus.dataset.polazak_id;
+            var pocetna_destinacija_id=autobus.dataset.pocetna_destinacija_id;
+            var krajnja_destinacija_id=autobus.dataset.krajnja_destinacija_id;
+            console.log(pocetna_destinacija_id,krajnja_destinacija_id,polazak_id,red,poz);
+            var ruta=`/rezervacija/rezervisanostsedista/${polazak_id}/${pocetna_destinacija_id}/${krajnja_destinacija_id}/${red}/${poz}`;
+            console.log(ruta);
+            fetch(host+ruta)
+            .then(function (response) {
+                return response.json();
+            }).then(function (json_response) {
+                if(json_response.zauzeto==0)
+                {
+                    console.log('123');
+                    povecajBrojRezervisanihSedista(sediste);
+                    sediste.classList.add('moja-rezervacija');
+                    sediste.classList.remove('slobodno');
+                    var input = document.createElement("input");
+                    var autobus_prikaz_element=sediste.closest('.autobus-wrapper').querySelector('.autobus-prikaz');
+                    var naziv_putovanja=autobus_prikaz_element.dataset.naziv_putovanja;
+                    var vreme_isteka;
+                    if(typeof autobus_prikaz_element.dataset.vreme_isteka=='undefined')
+                    {
+                        vreme_isteka=moment().add(10,'minutes');
+                        autobus_prikaz_element.dataset.vreme_isteka=vreme_isteka;
+                    }
+                    else
+                    {
+                        vreme_isteka=moment(autobus_prikaz_element.dataset.vreme_isteka);
+                    }
+                    console.log(naziv_putovanja);
+                    input.setAttribute("type", "hidden");
+                    input.setAttribute("name", naziv_putovanja+'_rezervacija[]');
+                    input.setAttribute("value", red+"_"+poz);
+                    sediste.appendChild(input);
+                    var ruta=`/rezervacija/privremenorezervisi/${polazak_id}/${pocetna_destinacija_id}/${krajnja_destinacija_id}/${red}/${poz}/${encodeURIComponent(vreme_isteka.format('YYYY-MM-DD HH:mm'))}`;
+                    fetch(host+ruta,{
+                        method:'POST'
+                    }).then(function (response) {
+                        return response.json();
+                    }).then(function(response)
+                    {
+                        var rezervisano_poruka=document.querySelector('.istice-poruka');
+                        if(typeof rezervisano_poruka.dataset.prikazana=='undefined')
+                        {
+                            console.log('x');
+                            rezervisano_poruka.dataset.prikazana=1;
+                            rezervisano_poruka.style.display='block'; 
+                            rezervisano_poruka.innerText=`Vaša rezervacija ističe u ${vreme_isteka.format('DD.MM.YYYY HH:mm')},ako je u međuvremenu ne završite.`;
+                            setTimeout(blokirajRezervaciju,10*60*1000)
+                        }
+                        sediste.dataset.id=response.id;
+                    })
+                }
+                else
+                {
+                    console.log('1234');
+                    var autobus_prikaz_element=sediste.closest('.autobus-wrapper').querySelector('.autobus-prikaz');
+                    var poruka_element=document.createElement('div');
+                    poruka_element.classList.add('alert');
+                    poruka_element.classList.add('alert-danger');
+                    poruka_element.classList.add('vec-rezervisano-poruka');
+                    poruka_element.classList.add('col-3');
+                    sediste.classList.remove('slobodno');
+                    sediste.classList.add('rezervisano')
+                    autobus_prikaz_element.insertAdjacentElement('afterend', poruka_element); 
+                    poruka_element.innerText='Sedište je u međuvremenu rezervisano';
+                    setTimeout(()=>
+                    {
+                        console.log('123');
+                        document.querySelector('.vec-rezervisano-poruka').style.display='none';
+                    },6*1000);
+                }
+            })
+        }
+        function blokirajRezervaciju()
+        {
+            console.log('123');
+            var submit_btn=document.querySelector('#submit-btn');
+            var zabranjena_poruka=document.querySelector('.zabranjena-poruka');
+            submit_btn.remove();
+            zabranjena_poruka.style.display='block';
         }
     }
 })();
