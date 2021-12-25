@@ -58,7 +58,7 @@ module.exports.promeni=(req,res)=>//cuva izmene
     .catch((err)=>Redirect.backWithValidationErrors(req,res,err))
     
 }
-module.exports.lista=async (req,res)=>//cuva izmene
+module.exports.lista=async (req,res)=>
 {
     var prevoznici=await Prevoznik.findAll();
     res.render('prevoznik/lista',{prevoznici:prevoznici});

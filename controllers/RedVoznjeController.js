@@ -229,3 +229,17 @@ module.exports.sacuvajkopiju=async (req,res)=>//cuva izmene
     }
     Redirect.backWithSuccess(req,res,"Novi red vožnje uspesno kreiran");
 }
+module.exports.lista=async (req,res)=>
+{
+    var redovi_voznje=await RedVoznje.findAll({
+        include:
+        [
+            {
+                model:Prevoznik,
+                as:'prevoznik',
+            }
+        ],
+    });
+    res.render('redvoznje/lista',{redovi_voznje:redovi_voznje,moment:moment});
+
+}

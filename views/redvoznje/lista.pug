@@ -1,0 +1,27 @@
+extends ../layout
+block content  
+    table.table
+        thead
+            tr
+            th(scope='col') #
+            th(scope='col') Naziv
+            th(scope='col') Rok važenja
+            th(scope='col') Dani polaska
+            th(scope='col') Vreme polaska sa prve 
+            th(scope='col') Prevoznik
+            th(scope='col') Akcija
+        tbody
+            -var red=1
+            each red_voznje in redovi_voznje
+                tr
+                td=red++
+                td=red_voznje.naziv
+                td=moment(red_voznje.pocetak_vazenja,'YYYY-MM-DD').format('DD.MM.YYYY.')+'-'+moment(red_voznje.rok_vazenja,'YYYY-MM-DD').format('DD.MM.YYYY.')
+                td=red_voznje.daniPolaska()
+                td=red_voznje.vreme_polaska
+                td=red_voznje.prevoznik.naziv
+                td 
+                    a.btn.btn-primary(href='../redvoznje/'+red_voznje.id+'/kopiraj')
+                        |Kopiraj
+        
+

@@ -47,6 +47,17 @@ module.exports = (sequelize, DataTypes) => {
     tableName:'redovi_voznje',
     createdAt:'vreme_kreiranja',
     updatedAt: 'poslednja_izmena',
-  });
+  });  RedVoznje.prototype.daniPolaska = function () {  
+      var dani='';
+      if(this.ponedeljak==1) {dani+='ponedeljak,';}
+      if(this.utorak==1) {dani+='utorak,';}
+      if(this.sreda==1) {dani+='sreda,';}
+      if(this.cetvrtak==1) {dani+='četvrtak,';}
+      if(this.petak==1) {dani+='petak,';}
+      if(this.subota==1) {dani+='subota,';}
+      if(this.nedelja==1) {dani+='nedelja,';}
+      return dani.slice(0,-1);
+      
+  }
   return RedVoznje;
 };
