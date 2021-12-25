@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     rezervacija_id: DataTypes.INTEGER,
     red: DataTypes.INTEGER,
     mesto_u_redu: DataTypes.INTEGER,
-    cena_karte: DataTypes.FLOAT
+    cena_karte: DataTypes.FLOAT,
+    sifra_karte: DataTypes.INTEGER,
+    ocitana: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'RezervisanoSediste',

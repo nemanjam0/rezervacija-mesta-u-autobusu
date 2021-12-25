@@ -82,7 +82,7 @@ module.exports.prikaziZauzetaSediste=async (polazak_id,pocetna_destinacija_id,kr
       })
       return asocijativni_niz_rezervisanih_sedista;
 }
-module.exports.kreirajRezervaciju=async (polazak_id,korisnik_id,platio,pocetna_destinacija_id,krajnja_destinacija_id,sedista,transakcija=null)=>
+module.exports.kreirajRezervaciju=async (polazak_id,korisnik_id,platio,pocetna_destinacija_id,krajnja_destinacija_id,sedista,cena_po_karti,transakcija=null)=>
 {
     var rezervacija_model=
     {
@@ -99,7 +99,8 @@ module.exports.kreirajRezervaciju=async (polazak_id,korisnik_id,platio,pocetna_d
     sedista.forEach((sediste)=>
     {
         var podaci=sediste.split('_');
-        rezervisana_sedista_modeli.push({rezervacija_id:rezervacija.id,red:podaci[0],mesto_u_redu:podaci[1],cena_karte:100});
+        var sifra_karte=Math.floor(9999+Math.random() * 90000)
+        rezervisana_sedista_modeli.push({rezervacija_id:rezervacija.id,red:podaci[0],mesto_u_redu:podaci[1],cena_karte:cena_po_karti,ocitana:false,sifra_karte:sifra_karte});
         
     })
     var sedista=await RezervisanoSediste.bulkCreate(rezervisana_sedista_modeli);

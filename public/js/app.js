@@ -261,6 +261,8 @@
                 event.target.querySelector('input[type="hidden"]').remove();
                 event.target.classList.remove('moja-rezervacija');
                 event.target.classList.add('slobodno');
+                var cena_karte=event.target.closest('.autobus-wrapper').dataset.cena_karte;
+                promeniCenuRacuna(-cena_karte);
             }
             
         }
@@ -338,6 +340,8 @@
                     }).then(function(response)
                     {
                         var rezervisano_poruka=document.querySelector('.istice-poruka');
+                        var cena_karte=sediste.closest('.autobus-wrapper').dataset.cena_karte;
+                        promeniCenuRacuna(cena_karte);
                         if(typeof rezervisano_poruka.dataset.prikazana=='undefined')
                         {
                             console.log('x');
@@ -377,6 +381,12 @@
             var zabranjena_poruka=document.querySelector('.zabranjena-poruka');
             submit_btn.remove();
             zabranjena_poruka.style.display='block';
+        }
+        function promeniCenuRacuna(iznos_povecanja)
+        {
+            var iznos_el=document.querySelector('.ukupna_cena');
+            var novi_iznos=parseInt(iznos_el.innerText)+parseInt(iznos_povecanja);
+            iznos_el.innerText=novi_iznos;
         }
     }
 })();

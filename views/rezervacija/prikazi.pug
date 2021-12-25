@@ -32,7 +32,7 @@ block content
                     label(for='vreme_isteka') Važi do
                     input#broj_sedista_levo.form-control(type='text' name='vreme_isteka')
                 br
-        div#autobus_jedansmer.autobus-wrapper(data-broj_putnika=broj_putnika data-red_voznje_id=cenovnik.red_voznje_id data-datum_polaska=datum_polaska data-vreme_polaska=cenovnik.red_voznje.vreme_polaska data-pocetna_destinacija_id=cenovnik.pocetna_destinacija.id data-krajnja_destinacija_id=cenovnik.krajnja_destinacija.id data-vreme_polaska_sa_prve_stanice=vreme_polaska_sa_prve_stanice)           
+        div#autobus_jedansmer.autobus-wrapper(data-cena_karte=cena_karte data-broj_putnika=broj_putnika data-red_voznje_id=cenovnik.red_voznje_id data-datum_polaska=datum_polaska data-vreme_polaska=cenovnik.red_voznje.vreme_polaska data-pocetna_destinacija_id=cenovnik.pocetna_destinacija.id data-krajnja_destinacija_id=cenovnik.krajnja_destinacija.id data-vreme_polaska_sa_prve_stanice=vreme_polaska_sa_prve_stanice)           
         if povratno                
             .col-3
                 label.form-label(for='datum_povratka') Datum povratka
@@ -40,8 +40,12 @@ block content
                 label.form-label(for='vreme_povratka') Vreme povratka
                 select#vreme_povratka.form-control.vreme_povratka(name='vreme_povratka' data-broj_putnika=broj_putnika)
                 div#vreme_poruka()
-            div#povratno-autobus.autobus-wrapper
+            div#povratno-autobus.autobus-wrapper(data-cena_karte=0)
         br
         .alert.alert-danger.zabranjena-poruka
             |Vreme za rezervaciju je isteklo.Možete ponovo započeti rezervaciju osvežavanjem stranice.
+        h2 
+            |Ukupno za plaćanje:&nbsp;
+            span.ukupna_cena 0
+            |din.
         button#submit-btn.btn.btn-primary(type='submit') Rezerviši

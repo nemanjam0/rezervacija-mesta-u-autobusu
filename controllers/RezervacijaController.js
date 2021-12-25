@@ -14,6 +14,7 @@ module.exports.prikazi=async (req,res)=>//prikazuje dijalog za kreiranje nove de
     var pocetna_destinacija_id=req.params.pocetna_destinacija;
     var krajnja_destinacija_id=req.params.krajnja_destinacija;
     var povratno=req.params.tip_karte=='povratna';
+    var cena_karte=0;
     var danasnji_datum=moment().format('YYYY-MM-DD');
     var broj_putnika=req.params.broj_putnika;
     var vreme_polaska=moment(decodeURIComponent(req.params.enkodovano_vreme),'DD.MM.YYYY h:m:s');
@@ -21,6 +22,14 @@ module.exports.prikazi=async (req,res)=>//prikazuje dijalog za kreiranje nove de
     var cenovnik=await cenovnikService.nadjiZaDestinacijeIDatum(pocetna_destinacija_id,krajnja_destinacija_id,vreme_polaska.format('YYYY-MM-DD'),red_voznje_id);
     var datum_polaska_srpski_format=vreme_polaska.format('DD.MM.YYYY.');
     var datum_polaska=vreme_polaska.format('YYYY-MM-DD');
+    if(povratno)
+    {
+        cena_karte=cenovnik[0].cena_povratna+cenovnik[0].pocetna_destinacija.cena_peronske+cenovnik[0].krajnja_destinacija.cena_peronske
+    }
+    else
+    {
+        cena_karte=cenovnik[0].cena_jedan_smer+cenovnik[0].pocetna_destinacija.cena_peronske;
+    }
     var polazak=await Polazak.findOne({
         where:
         {
@@ -48,8 +57,7 @@ module.exports.prikazi=async (req,res)=>//prikazuje dijalog za kreiranje nove de
     var krajnja_destinacija=destinacije[(destinacije[1].id==krajnja_destinacija_id)+0];
     var d=[pocetna_destinacija,krajnja_destinacija];
     var autobus=polazak.autobus;
-    polazak=JSON.parse(JSON.stringify(polazak));
-    res.render('rezervacija/prikazi',{datum_polaska,vreme_polaska_sa_prve_stanice:cenovnik[0].red_voznje.vreme_polaska,broj_putnika:broj_putnika,autobus,polazak,red_voznje_id:red_voznje_id,pocetna_destinacija_povratnog_id:krajnja_destinacija_id,krajnja_destinacija_povratnog_id:pocetna_destinacija_id,danasnji_datum:danasnji_datum,povratno:povratno,datum_polaska_srpski_format:datum_polaska_srpski_format,cenovnik:cenovnik[0],dodajMinuteNaVreme:dodajMinuteNaVreme,satnica_polaska:satnica_polaska});
+    res.render('rezervacija/prikazi',{cena_karte,datum_polaska,vreme_polaska_sa_prve_stanice:cenovnik[0].red_voznje.vreme_polaska,broj_putnika:broj_putnika,autobus,polazak,red_voznje_id:red_voznje_id,pocetna_destinacija_povratnog_id:krajnja_destinacija_id,krajnja_destinacija_povratnog_id:pocetna_destinacija_id,danasnji_datum:danasnji_datum,povratno:povratno,datum_polaska_srpski_format:datum_polaska_srpski_format,cenovnik:cenovnik[0],dodajMinuteNaVreme:dodajMinuteNaVreme,satnica_polaska:satnica_polaska});
     //res.end(JSON.stringify(cenovnik));
 }
 module.exports.terminiZaPovratak=async (req,res)=>
@@ -105,17 +113,28 @@ module.exports.rezervisi=async (req,res)=>
     var povratak_krajnja_destinacija_id=req.body[povratak_naziv_putovanja+'_krajnja_destinacija_id'];
     var povratak_polazak_id=req.body[povratak_naziv_putovanja+'_polazak_id'];
     var povratak_sedista=req.body[povratak_naziv_putovanja+'_rezervacija'];
-    var korisnik_id=1;
+    var polazak=await Polazak.findOne({
+        where:
+        {
+            id:prvi_smer_polazak_id
+        },
+    });
+    var red_voznje_id=polazak.red_voznje_id;
+    var cenovnik=await cenovnikService.nadjiZaDestinacijeIDatum(prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,moment(polazak.vreme_polaska).format('YYYY-MM-DD'),red_voznje_id);
+    var korisnik_id=req.session.korisnik_id;
     var platio=req.body.placanje;
     if(tip_putovanja=='jedansmer')
     {
-        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista);
+        var cena_po_karti=cenovnik[0].pocetna_destinacija.cena_peronske+cenovnik[0].cena_jedan_smer;
+        
+        
+        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista,cena_po_karti);
     }
     else
     {
-        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista);
-        var povratna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(povratak_polazak_id,korisnik_id,platio,povratak_pocetna_destinacija_id,povratak_krajnja_destinacija_id,povratak_sedista);
-        
+        var cena_po_karti=cenovnik[0].pocetna_destinacija.cena_peronske+cenovnik[0].krajnja_destinacija.cena_peronske+cenovnik[0].cena_povratna;
+        var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista,cena_po_karti);
+        var povratna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(povratak_polazak_id,korisnik_id,platio,povratak_pocetna_destinacija_id,povratak_krajnja_destinacija_id,povratak_sedista,0);
         var povratak=await Povratak.create({
             prva_rezervacija_id:pocetna_rezervacija_id,
             povratak_id:povratna_rezervacija_id,
@@ -151,7 +170,7 @@ module.exports.privremenoRezervisi=async (req,res)=>
     var mesto_u_redu=req.params.mesto_u_redu;
     var vreme_isteka=decodeURIComponent(req.params.vreme_isteka);
     var polazak_id=req.params.polazak_id;
-    var korisnik_id=1;
+    var korisnik_id=req.session.korisnik_id;
     var sediste=await rezervacijaService.privremenoRezervisi(polazak_id,korisnik_id,pocetna_destinacija_id,krajnja_destinacija_id,red,mesto_u_redu,vreme_isteka)
     console.log(sediste.id);
     res.send({id:sediste.id});
@@ -161,5 +180,9 @@ module.exports.privremenoObrisi=async(req,res)=>
     var id=req.params.privremeno_sediste_id;
     await rezervacijaService.obrisiPrivremeno(id);
     res.end();
+}
+module.exports.prikaziMoje=async(req,res)=>
+{
+
 }
 
