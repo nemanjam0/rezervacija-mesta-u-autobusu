@@ -4,6 +4,7 @@
   "description": "Rezervacija karata za autobus.",
   "main": "app.js",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "jade": "^1.11.0",

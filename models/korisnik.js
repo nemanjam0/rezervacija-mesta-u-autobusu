@@ -65,14 +65,7 @@ module.exports = (sequelize, DataTypes) => {
     sifra:
     {
       type:DataTypes.STRING,
-      validate:
-      {
-        len:{
-          args:[8,40],
-          msg:"Šifra mora imati između 8 i 40 karaktera",
-        }
       
-      }
     },
     tip_naloga:
     {

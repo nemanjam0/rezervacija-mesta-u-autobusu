@@ -1,6 +1,5 @@
 const express=require('express');
 const {sequelize,Korisnik,RedVoznje,Stanica,Polazak,Cenovnik,Prevoznik}=require('./models');
-const korisnik_rute=require('./routes/korisnici');
 const destinacija_rute=require('./routes/destinacija');
 const moment=require('moment');
 const prevoznik_rute=require('./routes/prevoznik');
