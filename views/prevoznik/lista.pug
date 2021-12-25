@@ -1,0 +1,21 @@
+extends ../layout
+block content  
+    table.table
+        thead
+            tr
+            th(scope='col') #
+            th(scope='col') Naziv
+            th(scope='col') Opis
+            th(scope='col') Akcija
+        tbody
+            -var red=1
+            each prevoznik in prevoznici
+                tr
+                td=red++
+                td=prevoznik.naziv
+                td=prevoznik.opis
+                td 
+                    a.btn.btn-warning(href='../prevoznik/'+prevoznik.id+'/izmeni')
+                        |Izmeni
+        
+

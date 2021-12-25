@@ -1,0 +1,21 @@
+extends ../layout
+block content  
+    table.table
+        thead
+            tr
+            th(scope='col') #
+            th(scope='col') Naziv
+            th(scope='col') Cena peronske
+            th(scope='col') Akcija
+        tbody
+            -var red=1
+            each destinacija in destinacije
+                tr
+                td=red++
+                td=destinacija.ime
+                td=destinacija.cena_peronske
+                td 
+                    a.btn.btn-warning(href='../destinacija/'+destinacija.id+'/izmeni')
+                        |Izmeni
+        
+

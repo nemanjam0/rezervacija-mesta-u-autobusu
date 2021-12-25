@@ -43,6 +43,8 @@ app.use('/',function (req, res, next) {
     res.locals.error=req.session.error || "";
     req.session.error="";
     req.session.success="";
+    res.locals.korisnik_id=req.session.korisnik_id;
+    res.locals.tip_naloga=req.session.tip_naloga;
     next();
 })
 app.use('/',pocetne_rute)
@@ -65,17 +67,6 @@ app.get('/start',(req,res)=>
 app.get('/view',(req,res)=>
 {
     res.send(200,req.session.korisnik_id)
-})
-app.post('/registracija',(req,res)=>
-{
-    const {email,sifra,tip_naloga}=req.body;
-    const newUser=Korisnik.create({email:email,sifra:sifra,tip_naloga:tip_naloga}).catch(err=>console.log(err));
-    console.log(newUser);
-  
-})
-app.get('/registracija',async(req,res)=>
-{
-    res.sendFile(__dirname+'\\stranice\\registracija.html');
 })
 //app.get('/login')
 app.listen({port:5000},async()=>

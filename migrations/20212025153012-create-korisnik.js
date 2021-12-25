@@ -25,7 +25,7 @@ module.exports = {
       },
       tip_naloga: {
         type: Sequelize.ENUM,
-        values:['korisnik','kondukter','vozac','prodavac'],
+        values:['korisnik','kondukter','vozac','prodavac','admin'],
       },
       vreme_kreiranja: {
         allowNull: false,

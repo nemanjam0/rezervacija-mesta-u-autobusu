@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 router.post('/kreiraj', upload.single('logo'),prevoznikController.sacuvaj);
 router.get('/kreiraj', prevoznikController.kreiraj);
+router.get('/lista', prevoznikController.lista);
 router.get('/:id/izmeni', prevoznikController.izmeni);
 router.post('/:id/izmeni/',upload.single('logo'), prevoznikController.promeni);
 module.exports=router;

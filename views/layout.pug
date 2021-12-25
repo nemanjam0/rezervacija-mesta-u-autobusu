@@ -7,23 +7,46 @@ html
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css')
     link(rel='stylesheet' href='/../css/bootstrap.min.css')
     link(rel='stylesheet' href='/../css/sass/main.css')
-    title Rezervacija autobuskih karata
+    title mojBus
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       .container-fluid
-        a.navbar-brand(href='#') Navbar
+        a.navbar-brand(href='/') mojBus
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
           span.navbar-toggler-icon
         #navbarNav.collapse.navbar-collapse
           ul.navbar-nav
+            if locals.tip_naloga=='korisnik'
+              li.nav-item
+                a.nav-link(href='#') Red vožnje
+              li.nav-item
+                a.nav-link(href='#') Prikaži rezervacije
+            if locals.tip_naloga=='admin'
+              li.nav-item
+                a.nav-link(href='#') Kreiraj autobus
+              li.nav-item
+                a.nav-link(href='#') Kreiraj red vožnje
+              li.nav-item
+                a.nav-link(href='#') Redovi vožnje
+              li.nav-item
+                a.nav-link(href='#') Kreiraj destinaciju 
+              li.nav-item
+                a.nav-link(href='#') Prikaži destinacije
+              li.nav-item
+                a.nav-link(href='#') Kreiraj prevoznika 
+              li.nav-item
+                a.nav-link(href='#') Prikaži prevoznike
+        ul.navbar-nav
+          if !locals.korisnik_id
             li.nav-item
-              a.nav-link.active(aria-current='page' href='#') Strana 1
+              a.nav-link(href='/prijava') Prijava
             li.nav-item
-              a.nav-link(href='#') Strana 2
+              a.nav-link(href='/registracija') Registracija
+            i.fas.fa-sign-out-alt
+          else 
             li.nav-item
-              a.nav-link(href='#') Strana 3
-            li.nav-item
-              a.nav-link.disabled Strana 4
+              form(action='/odjava' method='POST')
+                button.btn.primary-btn(type='submit') Odjava
     .containter
     if error!==""
       .row.justify-content-center

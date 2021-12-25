@@ -56,23 +56,27 @@ module.exports.registruj=async (req,res)=>//POST/registracija
     var sifra=req.body.sifra;
     if(Redirect.backIfUndefinedOrEmpty(req,res,ime,prezime,broj_telefona,email,sifra))
     {
-        console.log('1')
         return 1;
     }
-    console.log('2');
     var salt = await bcrypt.genSalt(15);
     var hesovana_sifra=await bcrypt.hash(sifra, salt);
     var korisnik=await Korisnik.create({ime:ime,prezime:prezime,broj_telefona:broj_telefona,email:email,sifra:hesovana_sifra,tip_naloga:'korisnik'})
     .catch((err)=>
     {
-        console.log('3');
         Redirect.backWithValidationErrors(req,res,err)
     }
     )
     
     if(korisnik)
     {
-        console.log('4');
         res.redirect('/prijava');
     }    
+}
+module.exports.odjava=async (req,res)=>
+{
+    req.session.korisnik_id=null;
+    req.session.tip_naloga=null;
+    res.locals.tip_naloga=null;
+    res.locals.tip_naloga=null;
+    res.redirect('/');
 }

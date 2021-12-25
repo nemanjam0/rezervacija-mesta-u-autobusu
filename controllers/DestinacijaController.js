@@ -50,3 +50,9 @@ module.exports.promeni=(req,res)=>//cuva izmene
     .then((data)=>Redirect.backWithSuccess(req,res,'Izmene uspešno sačuvane'))
     .catch((err)=>Redirect.backWithValidationErrors(req,res,err))
 }
+module.exports.lista=async (req,res)=>//cuva izmene
+{
+    var destinacije=await Destinacija.findAll();
+    res.render('Destinacija/lista',{destinacije:destinacije});
+
+}

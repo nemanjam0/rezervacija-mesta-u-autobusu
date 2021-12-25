@@ -4,5 +4,6 @@ let router=express.Router();
 router.get('/kreiraj', destinacijaController.kreiraj);
 router.post('/kreiraj', destinacijaController.sacuvaj);
 router.get('/:id/izmeni', destinacijaController.izmeni);
+router.get('/lista', destinacijaController.lista);
 router.post('/:id/izmeni/', destinacijaController.promeni);
 module.exports=router;
