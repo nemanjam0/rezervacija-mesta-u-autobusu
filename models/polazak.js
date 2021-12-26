@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'autobus_id',
         as:'autobus'
       });
+      this.belongsTo(models.RedVoznje,{
+        foreignKey:'red_voznje_id',
+        as:'red_voznje'
+      });
     }
   };
   Polazak.init({

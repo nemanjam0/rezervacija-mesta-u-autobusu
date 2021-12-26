@@ -1,0 +1,16 @@
+extends ../layout
+block content  
+    .row.justify-content-center
+        .col-xs-12.col-md-6
+            h3 Čitač karte
+            a(href='https://play.google.com/store/apps/details?id=tw.mobileapp.qrcode.banner')
+                .btn.btn-primary 
+                    |Otvori QR čitač karte
+            form(action='/rezervacija/citac' method='POST')
+                .form-group
+                    label(for='broj_karte') Broj karte
+                    input#broj_karte.form-control(type='text' name='broj_karte' value=locals.old('broj_karte'))
+                .form-group
+                    label(for='sifra_karte') Šifra karte
+                    input#sifra_karte.form-control(type='number' name='sifra_karte' value=locals.old('sifra_karte'))
+                    button.btn.btn-primary(type='submit') Učitaj

@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'red_voznje_id',
         as:'red_voznje'
       });
+      this.belongsTo(models.Destinacija,{
+        foreignKey:'destinacija_id',
+        as:'destinacija'
+      });
     }
   };
   Stanica.init({

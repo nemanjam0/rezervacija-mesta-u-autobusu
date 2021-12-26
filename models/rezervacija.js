@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         as:'krajnja_destinacija'
       });
       this.belongsTo(models.Korisnik,{
-        foreignKey:'korisnici',
+        foreignKey:'korisnik_id',
         as:'korisnik'
       });
       this.belongsTo(models.Polazak,{
@@ -28,11 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       this.hasMany(models.RezervisanoSediste,{
         foreignKey:'rezervacija_id',
-        as:'rezervisana_sediste'
-      });
-      this.hasMany(models.PrivremenoRezervisanoSediste,{
-        foreignKey:'rezervacija_id',
-        as:'privremeno_rezervisana_sediste'
+        as:'rezervisana_sedista'
       });
       this.hasOne(models.Povratak,{
         foreignKey:'prva_rezervacija_id',

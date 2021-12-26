@@ -1,0 +1,46 @@
+extends ../layout
+block content
+    .container
+        .row 
+            .col-12.d-flex.justify-content-center.flex-column
+                strong Relacija&nbsp;
+                =rezervisano_sediste.rezervacija.pocetna_destinacija.ime+'-'+rezervisano_sediste.rezervacija.krajnja_destinacija.ime
+                br
+                strong Broj karte&nbsp; 
+                =rezervisano_sediste.id
+                br
+                strong Šifra rezervacije&nbsp;
+                =rezervisano_sediste.sifra_karte
+                br
+                strong Vreme polaska&nbsp; 
+                =vreme_polaska
+
+                strong Red&nbsp;
+                =rezervisano_sediste.red
+                br
+                strong Mesto u redu&nbsp;
+                =rezervisano_sediste.mesto_u_redu
+                br
+                strong Ocitana&nbsp;
+                    if rezervisano_sediste.ocitana==0
+                        span.badge.bg-success Ne
+                    else
+                        span.badge.bg-danger Da
+                br
+                strong Platio&nbsp;
+                    if rezervisano_sediste.rezervacija.platio==0
+                        span.badge.bg-success Ne
+                    else
+                        span.badge.bg-danger Da
+                br
+                br
+                br
+                if rezervisano_sediste.ocitana==0
+                    form.col-12(action='/rezervacija/ocitaj/'+rezervisano_sediste.id+'/'+rezervisano_sediste.sifra_karte method='POST')
+                        .form-group
+                            button.btn.btn-primary.col-12(type='submit') Očitaj
+                else 
+                   .row.justify-content-center
+                        .d-flex.justify-content-center.flex-column
+                            .alert.alert-danger(role='alert')
+                                |Karta je već očitana

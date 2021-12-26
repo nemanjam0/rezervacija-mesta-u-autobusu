@@ -183,6 +183,87 @@ module.exports.privremenoObrisi=async(req,res)=>
 }
 module.exports.prikaziMoje=async(req,res)=>
 {
-
+    var rezervacije=await rezervacijaService.prikaziZaKorisnika(1);
+    res.render('rezervacija/moje',{rezervacije:rezervacije,moment:moment});
 }
+module.exports.prikaziRezervisanaSedista=async(req,res)=>
+{
+    var rezervacija_id=req.params.rezervacija_id;
+    var rezervisana_sedista=await rezervacijaService.nadjiSedistaZaRezervaciju(rezervacija_id)
+    var pocetna_stanica=await Stanica.findOne({
+        where:
+        {
+            red_voznje_id:rezervisana_sedista[0].rezervacija.polazak.red_voznje_id,
+            destinacija_id:rezervisana_sedista[0].rezervacija.pocetna_destinacija_id
+        },
+    })
+    var vreme_polaska=moment(rezervisana_sedista[0].rezervacija.polazak.vreme_polaska).add(pocetna_stanica.broj_minuta_od_pocetka,'minutes').format('DD.MM.YYYY. HH:mm')
+    res.render('rezervacija/rezervisana-sedista',{rezervisana_sedista,vreme_polaska})
+}
+module.exports.prikaziKartu=async (req,res)=>
+{
+    var broj_karte=req.params.id_karte;
+    var sifra_karte=req.params.sifra_karte;
+    var sediste=await rezervacijaService.nadjiSedistaZaRezervaciju(null,broj_karte);
+    if(sediste.length==0)
+    {
+        Redirect.toRouteWithError(req,res,'/rezervacija/citac','Karta sa tim brojem ne postoji.')
+        return;
+    }
+    var pocetna_stanica=await Stanica.findOne({
+        where:
+        {
+            red_voznje_id:sediste[0].rezervacija.polazak.red_voznje_id,
+            destinacija_id:sediste[0].rezervacija.pocetna_destinacija_id
+        },
+    })
+    var vreme_polaska=moment(sediste[0].rezervacija.polazak.vreme_polaska).add(pocetna_stanica.broj_minuta_od_pocetka,'minutes').format('DD.MM.YYYY. HH:mm')
+    res.render('rezervacija/karta',{rezervisano_sediste:sediste[0],vreme_polaska})
+}
+module.exports.ocitajKartu=async (req,res)=>
+{
+    var broj_karte=req.params.id_karte;
+    var sifra_karte=req.params.sifra_karte;
+    var sediste=await rezervacijaService.nadjiSedistaZaRezervaciju(null,broj_karte);
+    if(sediste.length==0)
+    {
+        Redirect.toRouteWithError(req,res,'/rezervacija/citac','Karta sa tim brojem ne postoji.')
+        return;
+    }
+    console.log(sediste[0],sifra_karte,sediste[0].sifra_karte);
+    var pogresna_sifra=0;
+    if(sediste[0].sifra_karte!=sifra_karte)
+    {
+        pogresna_sifra=1;
+    }
+    if(pogresna_sifra==1)
+    {
+        Redirect.toRouteWithError(req,res,'/rezervacija/citac','Pograšna šifra karte.')
+        return;
+    }
+    else
+    {
+        if(sediste[0].ocitana==1)
+        {
+            Redirect.toRouteWithError(req,res,'/rezervacija/citac','Pograšna šifra karte.')
+            return;
+        }
+        else
+        {
+            await RezervisanoSediste.update({ocitana:1},{where:{id:broj_karte}})
+            Redirect.backToRouteWithSuccess(req,res,'/rezervacija/citac','Karta očitana.')
+        }
+    }
+}
+module.exports.citac=function(req,res)
+{
+    res.render('rezervacija/citac');
+}
+module.exports.citacUcitaj=function(req,res)
+{
+    var broj_karte=req.body.broj_karte;
+    var sifra_karte=req.body.sifra_karte;
+    res.redirect(`../rezervacija/prikazi/${broj_karte}/${sifra_karte}`);
+}
+
 

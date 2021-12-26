@@ -368,7 +368,6 @@
                     poruka_element.innerText='Sedište je u međuvremenu rezervisano';
                     setTimeout(()=>
                     {
-                        console.log('123');
                         document.querySelector('.vec-rezervisano-poruka').style.display='none';
                     },6*1000);
                 }

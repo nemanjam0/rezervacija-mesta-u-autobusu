@@ -1,0 +1,34 @@
+extends ../layout
+block content  
+    .container 
+        .row 
+            .col-12
+                table.table
+                    thead
+                        tr
+                        th(scope='col') #
+                        th(scope='col') Relacija
+                        th(scope='col') Datum polaska
+                        th(scope='col') Prevoznik
+                        th(scope='col') Broj karata
+                        th(scope='col') Plaćeno
+                        th(scope='col') Akcija
+                    tbody
+                        -var red=1
+                        each rezervacija in rezervacije
+                            tr
+                            td=red++
+                            td=rezervacija.pocetna_destinacija.ime+'-'+rezervacija.krajnja_destinacija.ime
+                            td=moment(rezervacija.polazak.vreme_polaska).format("DD.MM.YYYY.")
+                            td=rezervacija.polazak.red_voznje.prevoznik.naziv
+                            td=rezervacija.get('broj_sedista')
+                            td 
+                                if rezervacija.platio==0
+                                    span.badge.bg-success Ne
+                                else
+                                    span.badge.bg-danger Da
+                            td 
+                                 a.btn.btn-warning(href='../rezervacija/prikazirezervisana/'+rezervacija.id)
+                                    |Detalji
+                    
+

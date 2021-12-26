@@ -26,11 +26,24 @@ module.exports.backWithError=(req,res,err)=>
     res.redirect('back')
 
 }
+module.exports.toRouteWithError=(req,res,route,err)=>
+{
+    req.session.error=err;  
+    res.redirect(route)
+
+}
 module.exports.backWithSuccess=(req,res,msg)=>
 {
     req.session.success=msg;  
     req.session.old_data="";
     res.redirect('back')
+
+}
+module.exports.backToRouteWithSuccess=(req,res,route,msg)=>
+{
+    req.session.success=msg;  
+    req.session.old_data="";
+    res.redirect(route)
 
 }
 module.exports.backIfUndefinedOrEmpty=(req,res,...data)=>

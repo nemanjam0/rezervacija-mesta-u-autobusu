@@ -1,4 +1,4 @@
-const {sequelize,Rezervacija,RezervisanoSediste,PrivremenoRezervisanoSediste}=require('../models');
+const {sequelize,Rezervacija,RezervisanoSediste,PrivremenoRezervisanoSediste,Destinacija,Polazak,Autobus,RedVoznje,Prevoznik}=require('../models');
 const {Op,QueryTypes}=require('sequelize');
 const moment=require('moment')
 module.exports.prikaziZauzetaSediste=async (polazak_id,pocetna_destinacija_id,krajnja_destinacija_id,specificno_sediste_red=null,specificno_sediste_mesto_u_redu=null)=>
@@ -115,7 +115,7 @@ module.exports.privremenoRezervisi=async (polazak_id,korisnik_id,pocetna_destina
     istek_rezervacije=predlog_isteka;
   }
   istek_rezervacije=istek_rezervacije.format("YYYY-MM-DD HH:mm")
-  var sediste=PrivremenoRezervisanoSediste.create(
+  var sediste=await PrivremenoRezervisanoSediste.create(
     {
       polazak_id:polazak_id,
       korisnik_id:korisnik_id,
@@ -136,3 +136,119 @@ module.exports.obrisiPrivremeno=async (id)=>
     }
 })
 }
+module.exports.prikaziZaKorisnika=async(korisnik_id)=>
+{
+  var rezervacije=Rezervacija.findAll(
+  {
+    where:
+    {
+      korisnik_id:korisnik_id
+    },
+    attributes: {
+      include: [
+        [sequelize.fn('COUNT', sequelize.col('rezervisana_sedista.id')), 'broj_sedista']
+      ]
+    },
+    include:
+    [
+      {
+          model:Destinacija,
+          as:'pocetna_destinacija', 
+      },
+      {
+          model:Destinacija,
+          as:'krajnja_destinacija', 
+      },
+      {
+        model:RezervisanoSediste,
+        as:'rezervisana_sedista', 
+      },
+      {
+          model:Polazak,
+          as:'polazak',
+          include:
+          [
+              {
+                  model:Autobus,
+                  as:'autobus'
+              },
+              {
+                  model:RedVoznje,
+                  as:'red_voznje',
+                  include:
+                  [
+                      {
+                          model:Prevoznik,
+                          as:'prevoznik'
+                      },
+                  ]
+              }
+          ] 
+    }
+    ],
+    group: ['Rezervacija.id']
+  })
+  return rezervacije;
+}
+module.exports.nadjiSedistaZaRezervaciju=async(rezervacija_id,specificno_sediste_id=null)=>
+{
+  var uslov=
+  {
+    
+  };
+  if(rezervacija_id!=null)
+  {
+    uslov.rezervacija_id=rezervacija_id;
+  }
+  if(specificno_sediste_id!=null)
+  {
+    uslov.id=specificno_sediste_id;
+  }
+  return RezervisanoSediste.findAll(
+    {
+      where:uslov,
+      
+    include:
+    [
+        {
+            model:Rezervacija,
+            as:'rezervacija',
+            include:
+            [
+            {
+                model:Destinacija,
+                as:'pocetna_destinacija', 
+            },
+            {
+                model:Destinacija,
+                as:'krajnja_destinacija', 
+            },
+            {
+                model:Polazak,
+                as:'polazak',
+                include:
+                [
+                    {
+                        model:Autobus,
+                        as:'autobus'
+                    },
+                    {
+                        model:RedVoznje,
+                        as:'red_voznje',
+                        include:
+                        [
+                            {
+                                model:Prevoznik,
+                                as:'prevoznik'
+                            },
+                        ]
+                    }
+                ] 
+            }
+            ]
+        }
+    ]
+})
+}
+
+
