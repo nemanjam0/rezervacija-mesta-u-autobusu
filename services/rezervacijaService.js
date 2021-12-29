@@ -128,11 +128,12 @@ module.exports.privremenoRezervisi=async (polazak_id,korisnik_id,pocetna_destina
   )
   return sediste;
 }
-module.exports.obrisiPrivremeno=async (id)=>
+module.exports.obrisiPrivremeno=async (id,korisnik_id)=>
 {
   var deleted=await PrivremenoRezervisanoSediste.destroy({
     where: {
-        id:id
+        id:id,
+        korisnik_id:korisnik_id
     }
 })
 }

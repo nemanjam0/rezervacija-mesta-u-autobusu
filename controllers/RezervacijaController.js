@@ -8,6 +8,7 @@ const {Op,QueryTypes}=require('sequelize');
 const cenovnikService=require('./../services/cenovnikService');
 const rezervacijaService=require('./../services/rezervacijaService');
 const {dodajMinuteNaVreme}=require('./../helpers/Vreme');
+const {imaPristupResursu,TipNaloga}=require('../services/autorizacijaService')
 module.exports.prikazi=async (req,res)=>//prikazuje dijalog za kreiranje nove destinacije
 {
     var red_voznje_id=req.params.red_voznje_id;
@@ -178,18 +179,24 @@ module.exports.privremenoRezervisi=async (req,res)=>
 module.exports.privremenoObrisi=async(req,res)=>
 {
     var id=req.params.privremeno_sediste_id;
-    await rezervacijaService.obrisiPrivremeno(id);
+    await rezervacijaService.obrisiPrivremeno(id,req.session.korisnik_id);
     res.end();
 }
 module.exports.prikaziMoje=async(req,res)=>
 {
-    var rezervacije=await rezervacijaService.prikaziZaKorisnika(1);
+    var rezervacije=await rezervacijaService.prikaziZaKorisnika(req.session.korisnik_id);
     res.render('rezervacija/moje',{rezervacije:rezervacije,moment:moment});
 }
 module.exports.prikaziRezervisanaSedista=async(req,res)=>
 {
     var rezervacija_id=req.params.rezervacija_id;
     var rezervisana_sedista=await rezervacijaService.nadjiSedistaZaRezervaciju(rezervacija_id)
+    var vlasnik_resursa_id=rezervisana_sedista[0].rezervacija.korisnik_id;
+    if(!imaPristupResursu(vlasnik_resursa_id,req.session.korisnik_id,req.session.tip_naloga,TipNaloga.admin,TipNaloga.kondukter,TipNaloga.prodavac))
+    {
+        res.render('403');
+        return;
+    }
     var pocetna_stanica=await Stanica.findOne({
         where:
         {
@@ -205,6 +212,12 @@ module.exports.prikaziKartu=async (req,res)=>
     var broj_karte=req.params.id_karte;
     var sifra_karte=req.params.sifra_karte;
     var sediste=await rezervacijaService.nadjiSedistaZaRezervaciju(null,broj_karte);
+    var vlasnik_resursa_id=sediste[0].rezervacija.korisnik_id;
+    if(!imaPristupResursu(vlasnik_resursa_id,req.session.korisnik_id,req.session.tip_naloga,TipNaloga.admin,TipNaloga.kondukter,TipNaloga.prodavac))
+    {
+        res.render('403');
+        return;
+    }
     if(sediste.length==0)
     {
         Redirect.toRouteWithError(req,res,'/rezervacija/citac','Karta sa tim brojem ne postoji.')

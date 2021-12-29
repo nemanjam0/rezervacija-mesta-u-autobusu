@@ -10,5 +10,7 @@ block content
                 .form-group
                     label(for='lozinka') Lozinka
                     input#lozinka.form-control(type='password' name='lozinka')
+                    if zahtevan_url
+                        input#zahtevan_url(type='hidden' name='zahtevan_url' value=zahtevan_url)
                 .form-group
                     button.btn.btn-primary(type='submit') Prijavi se

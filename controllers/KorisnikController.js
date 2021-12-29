@@ -11,6 +11,7 @@ module.exports.prijavi_korisnika=async (req,res)=>//POST tj prijava
 {
     var email=req.body.email;
     var lozinka=req.body.lozinka;
+    var zahtevan_url=req.body.zahtevan_url;
     if(Redirect.backIfUndefinedOrEmpty(req,res,email,lozinka))//ako vrati true znaci da je uradio redirect i poslao response,time prekidamo izvrsenje logike ispod posto podaci nisu validni tj. nisu svi podaci uneti
     {
         return;
@@ -33,7 +34,14 @@ module.exports.prijavi_korisnika=async (req,res)=>//POST tj prijava
         {
             req.session.korisnik_id=korisnik.id;
             req.session.tip_naloga=korisnik.tip_naloga;
-            res.redirect('/')
+            if(zahtevan_url)
+            {
+                res.redirect(decodeURI(zahtevan_url));
+            }
+            else
+            {
+                res.redirect('/')
+            }
         }
         else
         {

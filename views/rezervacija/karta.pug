@@ -38,7 +38,9 @@ block content
                 if rezervisano_sediste.ocitana==0
                     form.col-12(action='/rezervacija/ocitaj/'+rezervisano_sediste.id+'/'+rezervisano_sediste.sifra_karte method='POST')
                         .form-group
-                            button.btn.btn-primary.col-12(type='submit') Očitaj
+                        if locals.tip_naloga
+                            if locals.tip_naloga!='korisnik'
+                                button.btn.btn-primary.col-12(type='submit') Očitaj
                 else 
                    .row.justify-content-center
                         .d-flex.justify-content-center.flex-column

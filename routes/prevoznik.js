@@ -4,6 +4,7 @@ let router=express.Router();
 const path = require('path');
 const uuid=require('uuid')
 const multer  = require('multer')
+const {autorizacijaZaTipNaloga,autorizacijaZaResurs,TipNaloga}=require('../services/autorizacijaService')
 //https://stackoverflow.com/questions/31592726/how-to-store-a-file-with-file-extension-with-multer
 const storage = multer.diskStorage({
     destination: function(req, file, callback) {
@@ -16,9 +17,9 @@ const storage = multer.diskStorage({
     }
 });
 var upload = multer({ storage: storage })
-router.post('/kreiraj', upload.single('logo'),prevoznikController.sacuvaj);
-router.get('/kreiraj', prevoznikController.kreiraj);
-router.get('/lista', prevoznikController.lista);
-router.get('/:id/izmeni', prevoznikController.izmeni);
-router.post('/:id/izmeni/',upload.single('logo'), prevoznikController.promeni);
+router.post('/kreiraj', upload.single('logo'), autorizacijaZaTipNaloga(TipNaloga.admin), prevoznikController.sacuvaj);
+router.get('/kreiraj',  autorizacijaZaTipNaloga(TipNaloga.admin), prevoznikController.kreiraj);
+router.get('/lista',  autorizacijaZaTipNaloga(TipNaloga.admin), prevoznikController.lista);
+router.get('/:id/izmeni',  autorizacijaZaTipNaloga(TipNaloga.admin), prevoznikController.izmeni);
+router.post('/:id/izmeni/',upload.single('logo'), autorizacijaZaTipNaloga(TipNaloga.admin),  prevoznikController.promeni);
 module.exports=router;
