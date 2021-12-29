@@ -185,7 +185,11 @@ module.exports.privremenoObrisi=async(req,res)=>
 module.exports.prikaziMoje=async(req,res)=>
 {
     var rezervacije=await rezervacijaService.prikaziZaKorisnika(req.session.korisnik_id);
-    res.render('rezervacija/moje',{rezervacije:rezervacije,moment:moment});
+    var trenutni_datum=moment().format('YYYY-MM-DD')
+    var sutrasnji_datum=moment().add(1,'days').format('YYYY-MM-DD')
+    var statistika=await rezervacijaService.statistika(req.session.korisnik_id,trenutni_datum,sutrasnji_datum);
+    console.log(statistika);
+    res.render('rezervacija/moje',{rezervacije:rezervacije,moment:moment,statistika:statistika});
 }
 module.exports.prikaziRezervisanaSedista=async(req,res)=>
 {

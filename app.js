@@ -55,18 +55,9 @@ app.use('/autobus',autobus_rute);
 app.use('/rezervacija',rezervacija_rute);
 app.get('/t',async (req,res)=>
 {
-    
-})
-app.get('/start',(req,res)=>
-{
-    req.session.data=Math.floor(Math.random() * 10000)
-    res.send(200,req.session.data)
-    //korisnikController.kreirajNovogKorisnika(req,res);
-})
-
-app.get('/view',(req,res)=>
-{
-    res.send(200,req.session.korisnik_id)
+    req.session.korisnik_id=1;
+    req.session.tip_naloga='admin';
+    res.end();
 })
 //app.get('/login')
 app.listen({port:5000},async()=>

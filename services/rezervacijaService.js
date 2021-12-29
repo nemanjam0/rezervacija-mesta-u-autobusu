@@ -251,5 +251,29 @@ module.exports.nadjiSedistaZaRezervaciju=async(rezervacija_id,specificno_sediste
     ]
 })
 }
-
-
+module.exports.statistika=async (korisnik_id,pocetni_datum,krajnji_datum)=>
+{
+  let upit=`SELECT
+  COUNT(rezervisana_sedista.id) as broj_karata,
+  SUM(rezervisana_sedista.cena_karte) as ukupna_prodaja,
+  COUNT(DISTINCT rezervacije.id) as broj_rezervacija
+  FROM rezervacije 
+  INNER JOIN rezervisana_sedista ON rezervisana_sedista.rezervacija_id=rezervacije.id
+  WHERE rezervacije.vreme_kreiranja>=:pocetni_datum
+  AND rezervacije.vreme_kreiranja <=:krajnji_datum 
+  AND korisnik_id=:korisnik_id
+  `
+  let statistika=await sequelize.query(
+    upit,
+    {
+      replacements: 
+      { 
+      korisnik_id:korisnik_id,
+      pocetni_datum:pocetni_datum,
+      krajnji_datum:krajnji_datum,
+      },
+      type: QueryTypes.SELECT
+    }
+  );
+  return statistika[0];
+}

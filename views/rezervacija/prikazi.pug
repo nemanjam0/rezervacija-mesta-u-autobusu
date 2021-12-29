@@ -9,12 +9,15 @@ block content
             h3.text-center=datum_polaska_srpski_format+" "+polazak+"-"+dolazak
         .alert.alert-warning.istice-poruka
         .placanje 
-            h2 Da li plaćate karte odmah?
-            input(type='radio' name="placanje" class='placanje' value='1')
-            |Da
-            br
-            input(type='radio' name="placanje"  class='placanje' value='0' checked)
-            |Ne
+            if locals.tip_naloga=='korisnik'
+                h2 Da li plaćate karte odmah?
+                input(type='radio' name="placanje" class='placanje' value='1')
+                |Da
+                br
+                input(type='radio' name="placanje"  class='placanje' value='0' checked)
+                |Ne
+            else 
+                input(type='hidden' name="placanje" value='1')
             .placanje-podaci.col-3 
                 .form-group
                     label(for='ime_na_kartici') Ime na kartici

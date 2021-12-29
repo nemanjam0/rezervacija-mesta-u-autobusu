@@ -18,9 +18,9 @@ html
           ul.navbar-nav
             if locals.tip_naloga=='korisnik'
               li.nav-item
-                a.nav-link(href='#') Red vožnje
+                a.nav-link(href='/') Red vožnje
               li.nav-item
-                a.nav-link(href='#') Prikaži rezervacije
+                a.nav-link(href='/rezervacija/moje') Prikaži rezervacije
             if locals.tip_naloga=='admin'
               li.nav-item
                 a.nav-link(href='/autobus/kreiraj') Kreiraj autobus
@@ -36,9 +36,13 @@ html
                 a.nav-link(href='/prevoznik/kreiraj') Kreiraj prevoznika 
               li.nav-item
                 a.nav-link(href='/prevoznik/lista') Prikaži prevoznike
+              li.nav-item
+                a.nav-link(href='/rezervacija/moje') Prikaži rezervacije
             if locals.tip_naloga=='kondukter'
               li.nav-item
                 a.nav-link(href='/rezervacija/citac') Čitanje karte
+              li.nav-item
+                a.nav-link(href='rezervacija/moje') Prikaži rezervacije
             if locals.tip_naloga=='prodavac'
               li.nav-item
                 a.nav-link(href='rezervacija/moje') Prikaži rezervacije

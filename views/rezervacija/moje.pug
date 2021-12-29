@@ -2,17 +2,33 @@ extends ../layout
 block content  
     .container 
         .row 
+            .col-6 
+                table.table
+                    tbody
+                        tr
+                            th(scope='col') Broj rezervacija
+                            td=statistika.broj_rezervacija
+                        tr
+                            th(scope='col') Broj prodatih karata
+                            td=statistika.broj_karata
+                        tr
+                            th(scope='col') Ukupna vrednost prodatih karata
+                            if statistika.ukupna_prodaja
+                                td=statistika.ukupna_prodaja
+                            else
+                                td 0
+                     
             .col-12
                 table.table
                     thead
                         tr
-                        th(scope='col') #
-                        th(scope='col') Relacija
-                        th(scope='col') Datum polaska
-                        th(scope='col') Prevoznik
-                        th(scope='col') Broj karata
-                        th(scope='col') Plaćeno
-                        th(scope='col') Akcija
+                            th(scope='col') #
+                            th(scope='col') Relacija
+                            th(scope='col') Datum polaska
+                            th(scope='col') Prevoznik
+                            th(scope='col') Broj karata
+                            th(scope='col') Plaćeno
+                            th(scope='col') Akcija
                     tbody
                         -var red=1
                         each rezervacija in rezervacije
