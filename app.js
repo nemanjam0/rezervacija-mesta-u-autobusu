@@ -55,9 +55,9 @@ app.use('/autobus',autobus_rute);
 app.use('/rezervacija',rezervacija_rute);
 app.get('/t',async (req,res)=>
 {
-    req.session.korisnik_id=1;
-    req.session.tip_naloga='admin';
-    res.end();
+   /* req.session.korisnik_id=1;
+    req.session.tip_naloga='korisnik';
+    res.end();*/
 })
 //app.get('/login')
 app.listen({port:5000},async()=>

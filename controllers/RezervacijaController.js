@@ -133,6 +133,10 @@ module.exports.rezervisi=async (req,res)=>
     }
     else
     {
+        if(Redirect.backIfUndefinedOrEmpty(req,res,povratak_pocetna_destinacija_id,povratak_krajnja_destinacija_id))
+        {
+            return;
+        }
         var cena_po_karti=cenovnik[0].pocetna_destinacija.cena_peronske+cenovnik[0].krajnja_destinacija.cena_peronske+cenovnik[0].cena_povratna;
         var pocetna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(prvi_smer_polazak_id,korisnik_id,platio,prvi_smer_pocetna_destinacija_id,prvi_smer_krajnja_destinacija_id,prvi_smer_sedista,cena_po_karti);
         var povratna_rezervacija_id=await rezervacijaService.kreirajRezervaciju(povratak_polazak_id,korisnik_id,platio,povratak_pocetna_destinacija_id,povratak_krajnja_destinacija_id,povratak_sedista,0);
