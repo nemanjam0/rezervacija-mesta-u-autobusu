@@ -2,10 +2,10 @@ extends ../layout
 block content
     .container
         .row 
-            each rezervisano_sediste in rezervisana_sedista 
+            each rezervisano_sediste in rezervacija.rezervisana_sedista
                 .col-3 
                     strong Relacija&nbsp;
-                    =rezervisano_sediste.rezervacija.pocetna_destinacija.ime+'-'+rezervisano_sediste.rezervacija.krajnja_destinacija.ime
+                    =rezervacija.pocetna_destinacija.ime+'-'+rezervacija.krajnja_destinacija.ime
                     br
                     strong Broj karte&nbsp; 
                     =rezervisano_sediste.id
@@ -29,7 +29,7 @@ block content
                             span.badge.bg-danger Da
                     br
                     strong Platio&nbsp;
-                        if rezervisano_sediste.rezervacija.platio==0
+                        if rezervacija.platio==0
                             span.badge.bg-success Ne
                         else
                             span.badge.bg-danger Da

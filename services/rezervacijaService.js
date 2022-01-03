@@ -191,65 +191,63 @@ module.exports.prikaziZaKorisnika=async(korisnik_id)=>
   })
   return rezervacije;
 }
-module.exports.nadjiSedistaZaRezervaciju=async(rezervacija_id,specificno_sediste_id=null)=>
+module.exports.nadjiRezervacijuSaSedistima=async(rezervacija_id,specificno_sediste_id=null)=>
 {
-  var uslov=
-  {
-    
-  };
+  var uslov={};
+  var sediste_uslov={};
   if(rezervacija_id!=null)
   {
-    uslov.rezervacija_id=rezervacija_id;
+    uslov.id=rezervacija_id;
   }
+
   if(specificno_sediste_id!=null)
   {
-    uslov.id=specificno_sediste_id;
+    sediste_uslov.id=specificno_sediste_id;
   }
-  return RezervisanoSediste.findAll(
+  return Rezervacija.findOne(
     {
       where:uslov,
       
     include:
     [
-        {
-            model:Rezervacija,
-            as:'rezervacija',
-            include:
-            [
-            {
-                model:Destinacija,
-                as:'pocetna_destinacija', 
-            },
-            {
-                model:Destinacija,
-                as:'krajnja_destinacija', 
-            },
-            {
-                model:Polazak,
-                as:'polazak',
-                include:
-                [
-                    {
-                        model:Autobus,
-                        as:'autobus'
-                    },
-                    {
-                        model:RedVoznje,
-                        as:'red_voznje',
-                        include:
-                        [
-                            {
-                                model:Prevoznik,
-                                as:'prevoznik'
-                            },
-                        ]
-                    }
-                ] 
-            }
-            ]
+      {
+        model:RezervisanoSediste,
+        as:'rezervisana_sedista',
+        where:sediste_uslov
+      },
+      {
+          model:Destinacija,
+          as:'pocetna_destinacija', 
+      },
+      {
+          model:Destinacija,
+          as:'krajnja_destinacija', 
+      },
+      {
+          model:Polazak,
+          as:'polazak',
+          include:
+          [
+              {
+                  model:Autobus,
+                  as:'autobus'
+              },
+              {
+                  model:RedVoznje,
+                  as:'red_voznje',
+                  include:
+                  [
+                      {
+                          model:Prevoznik,
+                          as:'prevoznik'
+                      },
+                  ]
+              }
+          ]
         }
     ]
-})
+  }
+)
 }
 module.exports.statistika=async (korisnik_id,pocetni_datum,krajnji_datum)=>
 {
