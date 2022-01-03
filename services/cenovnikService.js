@@ -17,7 +17,6 @@ module.exports.nadjiZaDestinacijeIDatum=async (pocetna_destinacija_id,krajnja_de
             [Op.lte]:datum_polaska,
         }
     }
-    var naziv_dana="";
     if(specifican_red_voznje!=null)
     {
         uslov_red_voznje.id=specifican_red_voznje;
@@ -28,13 +27,13 @@ module.exports.nadjiZaDestinacijeIDatum=async (pocetna_destinacija_id,krajnja_de
     }
     switch(dan_u_nedelji)
     {
-        case 1: { uslov_red_voznje.ponedeljak=1; naziv_dana="Ponedeljak"; break;}
-        case 2: { uslov_red_voznje.utorak=1; naziv_dana="Utorak"; break;}
-        case 3: { uslov_red_voznje.sreda=1; naziv_dana="Sreda"; break;}
-        case 4: { uslov_red_voznje.cetvrtak=1; naziv_dana="Četvrtak"; break;}
-        case 5: { uslov_red_voznje.petak=1; naziv_dana="Petak"; break;}
-        case 6: { uslov_red_voznje.subota=1; naziv_dana="Subota"; break;}
-        case 7: { uslov_red_voznje.nedelja=1; naziv_dana="Nedelja"; break;}
+        case 1: { uslov_red_voznje.ponedeljak=1; break;}
+        case 2: { uslov_red_voznje.utorak=1; break;}
+        case 3: { uslov_red_voznje.sreda=1; break;}
+        case 4: { uslov_red_voznje.cetvrtak=1; break;}
+        case 5: { uslov_red_voznje.petak=1; break;}
+        case 6: { uslov_red_voznje.subota=1; break;}
+        case 7: { uslov_red_voznje.nedelja=1; break;}
     }
     var cenovnici=await Cenovnik.findAll({
         where:
