@@ -266,7 +266,7 @@ module.exports.ocitajKartu=async (req,res)=>
     {
         if(sediste[0].ocitana==1)
         {
-            Redirect.toRouteWithError(req,res,'/rezervacija/citac','Pograšna šifra karte.')
+            Redirect.toRouteWithError(req,res,'/rezervacija/citac','Karta je već očitana.')
             return;
         }
         else
