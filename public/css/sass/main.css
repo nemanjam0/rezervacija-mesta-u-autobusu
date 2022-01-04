@@ -134,4 +134,8 @@ body {
 .placanje-podaci {
   display: none;
 }
+
+#vreme_poruka {
+  display: none;
+}
 /*# sourceMappingURL=main.css.map */

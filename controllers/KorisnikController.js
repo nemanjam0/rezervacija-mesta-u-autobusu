@@ -51,6 +51,36 @@ module.exports.prijavi_korisnika=async (req,res)=>//POST tj prijava
     }
     res.end();
 }
+module.exports.noviPrikazi=(req,res)=>//stranica
+{
+    res.render('korisnik/novi')
+}
+module.exports.novi=async (req,res)=>//POST/registracija
+{
+    var ime=req.body.ime;
+    var prezime=req.body.prezime;
+    var broj_telefona=req.body.broj_telefona;
+    var email=req.body.email;
+    var sifra=req.body.sifra;
+    var tip_naloga=req.body.tip_naloga;
+    if(Redirect.backIfUndefinedOrEmpty(req,res,ime,prezime,broj_telefona,email,sifra,tip_naloga))
+    {
+        return 1;
+    }
+    var salt = await bcrypt.genSalt(15);
+    var hesovana_sifra=await bcrypt.hash(sifra, salt);
+    var korisnik=await Korisnik.create({ime:ime,prezime:prezime,broj_telefona:broj_telefona,email:email,sifra:hesovana_sifra,tip_naloga})
+    .catch((err)=>
+    {
+        Redirect.backWithValidationErrors(req,res,err)
+    }
+    )
+    
+    if(korisnik)
+    {
+        Redirect.backToRouteWithSuccess(req,res,'/korisnik/kreiraj','Novi korisnik uspešno kreiran');
+    }    
+}
 module.exports.registracija=(req,res)=>//stranica
 {
     res.render('korisnik/registracija')

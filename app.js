@@ -7,6 +7,7 @@ const pocetne_rute=require('./routes/pocetne');
 const autobus_rute=require('./routes/autobus');
 const redvoznje_rute=require('./routes/redvoznje');
 const rezervacija_rute=require('./routes/rezervacija');
+const korisnik_rute=require('./routes/korisnik');
 const parser = require('body-parser');
 const {Op}=require('sequelize');
 const session = require('express-session')
@@ -53,6 +54,7 @@ app.use('/prevoznik',prevoznik_rute)
 app.use('/redvoznje',redvoznje_rute);
 app.use('/autobus',autobus_rute);
 app.use('/rezervacija',rezervacija_rute);
+app.use('/korisnik',korisnik_rute);
 app.get('/t',async (req,res)=>
 {
    /* req.session.korisnik_id=1;

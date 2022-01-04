@@ -42,7 +42,7 @@ block content
                 input#datum_povratka.form-control.datum_povratka(type='date' name='datum_povratka' data-red_voznje_id=red_voznje_id data-pocetna_destinacija_id=pocetna_destinacija_povratnog_id data-krajnja_destinacija_id=krajnja_destinacija_povratnog_id value=danasnji_datum data-prevoznik_id=cenovnik.red_voznje.prevoznik_id)
                 label.form-label(for='vreme_povratka') Vreme povratka
                 select#vreme_povratka.form-control.vreme_povratka(name='vreme_povratka' data-broj_putnika=broj_putnika)
-                div#vreme_poruka()
+                div#vreme_poruka.alert.alert-danger
             div#povratno-autobus.autobus-wrapper(data-cena_karte=0)
         br
         .alert.alert-danger.zabranjena-poruka

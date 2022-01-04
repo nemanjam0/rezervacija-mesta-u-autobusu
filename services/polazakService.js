@@ -2,7 +2,7 @@ const moment=require('moment')
 module.exports.kreirajPolaskeZaRedVoznje=(red_voznje_id,autobus_id,vreme_polaska,pocetak_vazenja,rok_vazenja,ponedeljak,utorak,sreda,cetvrtak,petak,subota,nedelja)=>//kreira sve polaske za odredjeni red voznje
 {
     var dani=[ponedeljak,utorak,sreda,cetvrtak,petak,subota,nedelja];
-    pocetak_vazenja=moment(pocetak_vazenja).endOf('day');
+    pocetak_vazenja=moment(pocetak_vazenja).startOf('day');
     rok_vazenja=moment(rok_vazenja).endOf('day');
     var polasci_modeli=[]
     for(var i=0;i<7;i++)

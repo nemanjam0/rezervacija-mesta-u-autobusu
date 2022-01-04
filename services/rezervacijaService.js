@@ -143,18 +143,20 @@ module.exports.prikaziZaKorisnika=async(korisnik_id)=>
   {
     where:
     {
-      korisnik_id:korisnik_id
+      korisnik_id:korisnik_id//od svih rezervacija prikazace samo one koje je napravio odredjeni korisnik
     },
     attributes: {
       include: [
         [sequelize.fn('COUNT', sequelize.col('rezervisana_sedista.id')), 'broj_sedista']
+        //pored svih atributa modela potrebno je prikazati i broj rezervisanih sedista za svaku rezervaciju zbog toga korisntimo sequlize funkciju
+        //kao prvi parametar se prosledjuje naziv funckije,kao drugi parametar kolona nad kojom se funckija primenjuje,a kao treci parametar kako ce se zvati izlaz iz funckije tj. naziv atributa
       ]
     },
-    include:
+    include://ukljucivanje asocijacija
     [
       {
-          model:Destinacija,
-          as:'pocetna_destinacija', 
+          model:Destinacija,//pored informacija o rezervaciji zelimo da prikazemo i naziv pocetne destinacije zbog toga moramo ukljucti asocijaciju Destinacija
+          as:'pocetna_destinacija', //posto 2x ukljucajemo model Destinacija za pocetnu i krajnju destinaciju moramo koristiti alijas
       },
       {
           model:Destinacija,
@@ -164,22 +166,18 @@ module.exports.prikaziZaKorisnika=async(korisnik_id)=>
         model:RezervisanoSediste,
         as:'rezervisana_sedista', 
       },
-      {
+      {//zelimo da prikazemo i naziv prevoznika kod koga je izvrsena rezervacija,ali da bi dosli do tog podataka potrebno je proci kroz vise asocijacija (odnosno tabela u bazi)
           model:Polazak,
           as:'polazak',
           include:
           [
               {
-                  model:Autobus,
-                  as:'autobus'
-              },
-              {
-                  model:RedVoznje,
+                  model:RedVoznje,//nalazimo red voznje kojem pripada polazak
                   as:'red_voznje',
                   include:
                   [
                       {
-                          model:Prevoznik,
+                          model:Prevoznik,//posto red voznje sadrzi relaciju sa prevoznikom tako dobijamo prevoznika
                           as:'prevoznik'
                       },
                   ]
@@ -187,7 +185,8 @@ module.exports.prikaziZaKorisnika=async(korisnik_id)=>
           ] 
     }
     ],
-    group: ['Rezervacija.id']
+    group: ['Rezervacija.id'],//grupisemo po idiju rezervacije(zbog prebrojavanja broja sedista po rezervaciji)
+    order:[['vreme_kreiranja','DESC']]
   })
   return rezervacije;
 }

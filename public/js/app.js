@@ -114,15 +114,18 @@
             var option = document.createElement('option');
             option.selected=1;
             option.innerHTML = response.length>0 ? 'Odaberi vreme polaska':'';
+            dom.povratnoAutobus.innerHTML='';
             dom.vremePovratka.appendChild(option);
             if(response.length==0)
             {
                 var el=document.querySelector('#vreme_poruka');
+                el.style.display='block';
                 el.innerText="Za odabrani datum nema nijedan polazak (za odabranog prevoznika)"
             }
             else
             {
                 var el=document.querySelector('#vreme_poruka');
+                el.style.display='none';
                 el.innerText="";
             }
             response.forEach((vreme)=>

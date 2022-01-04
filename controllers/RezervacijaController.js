@@ -57,6 +57,7 @@ module.exports.prikazi=async (req,res)=>//prikazuje dijalog za kreiranje nove de
     var pocetna_destinacija=destinacije[(destinacije[0].id!=pocetna_destinacija_id)+0];//+0 kako bi konvertovali boolean u int
     var krajnja_destinacija=destinacije[(destinacije[1].id==krajnja_destinacija_id)+0];
     var d=[pocetna_destinacija,krajnja_destinacija];
+    console.log(polazak);
     var autobus=polazak.autobus;
     res.render('rezervacija/prikazi',{cena_karte,datum_polaska,vreme_polaska_sa_prve_stanice:cenovnik[0].red_voznje.vreme_polaska,broj_putnika:broj_putnika,autobus,polazak,red_voznje_id:red_voznje_id,pocetna_destinacija_povratnog_id:krajnja_destinacija_id,krajnja_destinacija_povratnog_id:pocetna_destinacija_id,danasnji_datum:danasnji_datum,povratno:povratno,datum_polaska_srpski_format:datum_polaska_srpski_format,cenovnik:cenovnik[0],dodajMinuteNaVreme:dodajMinuteNaVreme,satnica_polaska:satnica_polaska});
     //res.end(JSON.stringify(cenovnik));

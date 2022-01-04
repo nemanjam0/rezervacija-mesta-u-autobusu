@@ -30,7 +30,7 @@ h2.col-12
                             input.sediste.slobodno(type="button" data-red=br_reda data-poz=sediste_u_redu++)
     
         .zadnji-red
-            span#br_reda=br_reda
+            span#br_reda=br_reda<10 ? '0'+br_reda:br_reda
             |&nbsp;&nbsp;
             -sediste_u_redu=0
             while sediste_u_redu++<autobus.broj_sedista_u_zadnjem_redu
