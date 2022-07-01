@@ -1,120 +1,107 @@
-const express=require('express')
-const {sequelize,Korisnik}=require('./../models');
+const express = require('express')
+const { sequelize, Korisnik } = require('./../models');
 const parser = require('body-parser');
-const Redirect=require('./../helpers/Redirect');
-const bcrypt=require('bcrypt');
-module.exports.prijava=(req,res)=>//stranica
+const Redirect = require('./../helpers/Redirect');
+const bcrypt = require('bcrypt');
+module.exports.prijava = (req, res) =>//stranica
 {
     res.render('korisnik/prijava')
 }
-module.exports.prijavi_korisnika=async (req,res)=>//POST tj prijava
+module.exports.prijavi_korisnika = async (req, res) =>//POST tj prijava
 {
-    var email=req.body.email;
-    var lozinka=req.body.lozinka;
-    var zahtevan_url=req.body.zahtevan_url;
-    if(Redirect.backIfUndefinedOrEmpty(req,res,email,lozinka))//ako vrati true znaci da je uradio redirect i poslao response,time prekidamo izvrsenje logike ispod posto podaci nisu validni tj. nisu svi podaci uneti
+    const email = req.body.email;
+    const lozinka = req.body.lozinka;
+    const zahtevan_url = req.body.zahtevan_url;
+    if (Redirect.backIfUndefinedOrEmpty(req, res, email, lozinka))//ako vrati true znaci da je uradio redirect i poslao response,time prekidamo izvrsenje logike ispod posto podaci nisu validni tj. nisu svi podaci uneti
     {
         return;
     }
     const korisnik = await Korisnik.findOne({
         where: {
-          email:email
+            email: email
         }
-      });
-    
-    if(korisnik==null)
-    {
-        req.session.error='Greška korisnik sa tim emailom i lozinkom ne postoji.'
+    });
+
+    if (korisnik == null) {
+        req.session.error = 'Greška korisnik sa tim emailom i lozinkom ne postoji.'
         res.redirect('back');
     }
-    else
-    {
-        var sifra_je_validna = await bcrypt.compare(lozinka,korisnik.sifra);
-        if(sifra_je_validna)
-        {
-            req.session.korisnik_id=korisnik.id;
-            req.session.tip_naloga=korisnik.tip_naloga;
-            if(zahtevan_url)
-            {
+    else {
+        const sifra_je_validna = await bcrypt.compare(lozinka, korisnik.sifra);
+        if (sifra_je_validna) {
+            req.session.korisnik_id = korisnik.id;
+            req.session.tip_naloga = korisnik.tip_naloga;
+            if (zahtevan_url) {
                 res.redirect(decodeURI(zahtevan_url));
             }
-            else
-            {
+            else {
                 res.redirect('/')
             }
         }
-        else
-        {
-            req.session.error='Greška korisnik sa tim emailom i lozinkom ne postoji.'
+        else {
+            req.session.error = 'Greška korisnik sa tim emailom i lozinkom ne postoji.'
             res.redirect('back');
         }
     }
     res.end();
 }
-module.exports.noviPrikazi=(req,res)=>//stranica
+module.exports.noviPrikazi = (req, res) =>//stranica
 {
     res.render('korisnik/novi')
 }
-module.exports.novi=async (req,res)=>//POST/registracija
+module.exports.novi = async (req, res) =>//POST/registracija
 {
-    var ime=req.body.ime;
-    var prezime=req.body.prezime;
-    var broj_telefona=req.body.broj_telefona;
-    var email=req.body.email;
-    var sifra=req.body.sifra;
-    var tip_naloga=req.body.tip_naloga;
-    if(Redirect.backIfUndefinedOrEmpty(req,res,ime,prezime,broj_telefona,email,sifra,tip_naloga))
-    {
+    const ime = req.body.ime;
+    const prezime = req.body.prezime;
+    const broj_telefona = req.body.broj_telefona;
+    const email = req.body.email;
+    const sifra = req.body.sifra;
+    const tip_naloga = req.body.tip_naloga;
+    if (Redirect.backIfUndefinedOrEmpty(req, res, ime, prezime, broj_telefona, email, sifra, tip_naloga)) {
         return 1;
     }
-    var salt = await bcrypt.genSalt(15);
-    var hesovana_sifra=await bcrypt.hash(sifra, salt);
-    var korisnik=await Korisnik.create({ime:ime,prezime:prezime,broj_telefona:broj_telefona,email:email,sifra:hesovana_sifra,tip_naloga})
-    .catch((err)=>
-    {
-        Redirect.backWithValidationErrors(req,res,err)
+    const salt = await bcrypt.genSalt(15);
+    const hesovana_sifra = await bcrypt.hash(sifra, salt);
+    const korisnik = await Korisnik.create({ ime: ime, prezime: prezime, broj_telefona: broj_telefona, email: email, sifra: hesovana_sifra, tip_naloga })
+        .catch((err) => {
+            Redirect.backWithValidationErrors(req, res, err)
+        }
+        )
+
+    if (korisnik) {
+        Redirect.backToRouteWithSuccess(req, res, '/korisnik/kreiraj', 'Novi korisnik uspešno kreiran');
     }
-    )
-    
-    if(korisnik)
-    {
-        Redirect.backToRouteWithSuccess(req,res,'/korisnik/kreiraj','Novi korisnik uspešno kreiran');
-    }    
 }
-module.exports.registracija=(req,res)=>//stranica
+module.exports.registracija = (req, res) =>//stranica
 {
     res.render('korisnik/registracija')
 }
-module.exports.registruj=async (req,res)=>//POST/registracija
+module.exports.registruj = async (req, res) =>//POST/registracija
 {
-    var ime=req.body.ime;
-    var prezime=req.body.prezime;
-    var broj_telefona=req.body.broj_telefona;
-    var email=req.body.email;
-    var sifra=req.body.sifra;
-    if(Redirect.backIfUndefinedOrEmpty(req,res,ime,prezime,broj_telefona,email,sifra))
-    {
+    const ime = req.body.ime;
+    const prezime = req.body.prezime;
+    const broj_telefona = req.body.broj_telefona;
+    const email = req.body.email;
+    const sifra = req.body.sifra;
+    if (Redirect.backIfUndefinedOrEmpty(req, res, ime, prezime, broj_telefona, email, sifra)) {
         return 1;
     }
-    var salt = await bcrypt.genSalt(15);
-    var hesovana_sifra=await bcrypt.hash(sifra, salt);
-    var korisnik=await Korisnik.create({ime:ime,prezime:prezime,broj_telefona:broj_telefona,email:email,sifra:hesovana_sifra,tip_naloga:'korisnik'})
-    .catch((err)=>
-    {
-        Redirect.backWithValidationErrors(req,res,err)
-    }
-    )
-    
-    if(korisnik)
-    {
+    const salt = await bcrypt.genSalt(15);
+    const hesovana_sifra = await bcrypt.hash(sifra, salt);
+    const korisnik = await Korisnik.create({ ime: ime, prezime: prezime, broj_telefona: broj_telefona, email: email, sifra: hesovana_sifra, tip_naloga: 'korisnik' })
+        .catch((err) => {
+            Redirect.backWithValidationErrors(req, res, err)
+        }
+        )
+
+    if (korisnik) {
         res.redirect('/prijava');
-    }    
+    }
 }
-module.exports.odjava=async (req,res)=>
-{
-    req.session.korisnik_id=null;
-    req.session.tip_naloga=null;
-    res.locals.tip_naloga=null;
-    res.locals.tip_naloga=null;
+module.exports.odjava = async (req, res) => {
+    req.session.korisnik_id = null;
+    req.session.tip_naloga = null;
+    res.locals.tip_naloga = null;
+    res.locals.tip_naloga = null;
     res.redirect('/');
 }
