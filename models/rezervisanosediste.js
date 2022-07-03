@@ -1,22 +1,8 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class RezervisanoSediste extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      this.belongsTo(models.Rezervacija,{
-        foreignKey:'rezervacija_id',
-        as:'rezervacija'
-      });
-    }
-  };
-  RezervisanoSediste.init({
+import sequelize from 'sequelize'
+const DataTypes = sequelize.DataTypes;
+const RezervisanoSediste = {
+  init: (db) => db.define('RezervisanoSediste', {
     rezervacija_id: DataTypes.INTEGER,
     red: DataTypes.INTEGER,
     mesto_u_redu: DataTypes.INTEGER,
@@ -26,9 +12,17 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'RezervisanoSediste',
-    tableName:'rezervisana_sedista',
-    createdAt:'vreme_kreiranja',
+    tableName: 'rezervisana_sedista',
+    createdAt: 'vreme_kreiranja',
     updatedAt: 'poslednja_izmena',
-  });
-  return RezervisanoSediste;
-};
+  }),
+
+  associate: (db) => {
+    db.models.RezervisanoSediste.belongsTo(db.models.Rezervacija, {
+      foreignKey: 'rezervacija_id',
+      as: 'rezervacija'
+    });
+  }
+}
+
+export default RezervisanoSediste;

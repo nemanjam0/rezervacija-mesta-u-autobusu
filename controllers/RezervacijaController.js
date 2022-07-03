@@ -1,15 +1,15 @@
-const express = require('express')
-const { sequelize, RedVoznje, Prevoznik, Autobus, Destinacija, Cenovnik, Stanica, Polazak, Rezervacija, RezervisanoSediste, PrivremenoRezervisanoSediste, Povratak } = require('../models');
-const parser = require('body-parser');
-const moment = require('moment')
-const { redirect } = require('express/lib/response');
-const Redirect = require('./../helpers/Redirect');
-const { Op, QueryTypes } = require('sequelize');
-const cenovnikService = require('./../services/cenovnikService');
-const rezervacijaService = require('./../services/rezervacijaService');
-const { dodajMinuteNaVreme } = require('./../helpers/Vreme');
-const { imaPristupResursu, TipNaloga } = require('../services/autorizacijaService')
-module.exports.prikazi = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+//const { Autobus, Destinacija, Stanica, Polazak, RezervisanoSediste, Povratak } = require('../models');
+import moment from 'moment';
+import * as Redirect from './../helpers/Redirect.js'
+import * as cenovnikService from './../services/cenovnikService.js';
+import * as rezervacijaService from './../services/rezervacijaService.js';
+import { dodajMinuteNaVreme } from './../helpers/Vreme.js';
+import { imaPristupResursu, TipNaloga } from '../services/autorizacijaService.js'
+import Sequelize from 'sequelize'
+import sequelize from '../models/index.js';
+const { Autobus, Destinacija, Polazak, Povratak, RezervisanoSediste, Stanica } = sequelize.models;
+const Op = Sequelize.Op;
+export const prikazi = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
     const red_voznje_id = req.params.red_voznje_id;
     const pocetna_destinacija_id = req.params.pocetna_destinacija;
@@ -60,7 +60,7 @@ module.exports.prikazi = async (req, res) =>//prikazuje dijalog za kreiranje nov
     res.render('rezervacija/prikazi', { cena_karte, datum_polaska, vreme_polaska_sa_prve_stanice: cenovnik[0].red_voznje.vreme_polaska, broj_putnika: broj_putnika, autobus, polazak, red_voznje_id: red_voznje_id, pocetna_destinacija_povratnog_id: krajnja_destinacija_id, krajnja_destinacija_povratnog_id: pocetna_destinacija_id, danasnji_datum: danasnji_datum, povratno: povratno, datum_polaska_srpski_format: datum_polaska_srpski_format, cenovnik: cenovnik[0], dodajMinuteNaVreme: dodajMinuteNaVreme, satnica_polaska: satnica_polaska });
     //res.end(JSON.stringify(cenovnik));
 }
-module.exports.terminiZaPovratak = async (req, res) => {
+export const terminiZaPovratak = async (req, res) => {
     const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
     const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
     const datum_polaska = decodeURIComponent(req.params.enkodovan_datum);
@@ -70,7 +70,7 @@ module.exports.terminiZaPovratak = async (req, res) => {
     cenovnici.forEach(cenovnik => vremena.push({ red_voznje_id: cenovnik.red_voznje.id, vreme_polaska_sa_prve_stanice: cenovnik.red_voznje.vreme_polaska, vreme: dodajMinuteNaVreme(cenovnik.red_voznje.vreme_polaska, cenovnik.red_voznje.stanice[0].broj_minuta_od_pocetka) }));
     res.end(JSON.stringify(vremena.sort((a, b) => a.vreme > b.vreme ? 1 : -1)));
 }
-module.exports.prikaziAutobus = async (req, res) => {
+export const prikaziAutobus = async (req, res) => {
     const red_voznje_id = req.params.red_voznje_id;
     const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
     const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
@@ -95,10 +95,11 @@ module.exports.prikaziAutobus = async (req, res) => {
                 }
             ],
     })
+    console.log(polazak);
     const rezervisana_sedista = await rezervacijaService.prikaziZauzetaSediste(polazak.id, pocetna_destinacija_id, krajnja_destinacija_id);
     res.render('rezervacija/autobus-sedista', { rezervisana_sedista, naziv_putovanja, autobus: polazak.autobus, polazak, broj_putnika, pocetna_destinacija_id, krajnja_destinacija_id })
 }
-module.exports.rezervisi = async (req, res) => {
+export const rezervisi = async (req, res) => {
     const tip_putovanja = req.params.tip_putovanja;
     const prvi_smer_naziv_putovanja = req.body.nazivi_putovanja[0];
     const prvi_smer_pocetna_destinacija_id = req.body[prvi_smer_naziv_putovanja + '_pocetna_destinacija_id'];
@@ -140,7 +141,7 @@ module.exports.rezervisi = async (req, res) => {
     }
     Redirect.backWithSuccess(req, res, 'Rezervacija uspešno kreirana');
 }
-module.exports.proveriRezervisanostSedista = async (req, res) => {
+export const proveriRezervisanostSedista = async (req, res) => {
     const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
     const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
     const red = req.params.red;
@@ -157,7 +158,7 @@ module.exports.proveriRezervisanostSedista = async (req, res) => {
     console.log(odg);
     res.send(odg);
 }
-module.exports.privremenoRezervisi = async (req, res) => {
+export const privremenoRezervisi = async (req, res) => {
     const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
     const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
     const red = req.params.red;
@@ -169,12 +170,12 @@ module.exports.privremenoRezervisi = async (req, res) => {
     console.log(sediste.id);
     res.send({ id: sediste.id });
 }
-module.exports.privremenoObrisi = async (req, res) => {
+export const privremenoObrisi = async (req, res) => {
     const id = req.params.privremeno_sediste_id;
     await rezervacijaService.obrisiPrivremeno(id, req.session.korisnik_id);
     res.end();
 }
-module.exports.prikaziMoje = async (req, res) => {
+export const prikaziMoje = async (req, res) => {
     const rezervacije = await rezervacijaService.prikaziZaKorisnika(req.session.korisnik_id);
     const trenutni_datum = moment().format('YYYY-MM-DD')
     const sutrasnji_datum = moment().add(1, 'days').format('YYYY-MM-DD')
@@ -182,7 +183,7 @@ module.exports.prikaziMoje = async (req, res) => {
     console.log(statistika);
     res.render('rezervacija/moje', { rezervacije: rezervacije, moment: moment, statistika: statistika });
 }
-module.exports.prikaziRezervisanaSedista = async (req, res) => {
+export const prikaziRezervisanaSedista = async (req, res) => {
     const rezervacija_id = req.params.rezervacija_id;
     const rezervacija = await rezervacijaService.nadjiRezervacijuSaSedistima(rezervacija_id)
     const vlasnik_resursa_id = rezervacija.korisnik_id;
@@ -200,7 +201,7 @@ module.exports.prikaziRezervisanaSedista = async (req, res) => {
     const vreme_polaska = moment(rezervacija.polazak.vreme_polaska).add(pocetna_stanica.broj_minuta_od_pocetka, 'minutes').format('DD.MM.YYYY. HH:mm')
     res.render('rezervacija/rezervisana-sedista', { rezervacija, vreme_polaska })
 }
-module.exports.prikaziKartu = async (req, res) => {
+export const prikaziKartu = async (req, res) => {
     const broj_karte = req.params.id_karte;
     const sifra_karte = req.params.sifra_karte;
     const rezervacija = await rezervacijaService.nadjiRezervacijuSaSedistima(null, broj_karte);
@@ -223,7 +224,7 @@ module.exports.prikaziKartu = async (req, res) => {
     const vreme_polaska = moment(rezervacija.polazak.vreme_polaska).add(pocetna_stanica.broj_minuta_od_pocetka, 'minutes').format('DD.MM.YYYY. HH:mm')
     res.render('rezervacija/karta', { rezervacija: rezervacija, vreme_polaska })
 }
-module.exports.ocitajKartu = async (req, res) => {
+export const ocitajKartu = async (req, res) => {
     const broj_karte = req.params.id_karte;
     const sifra_karte = req.params.sifra_karte;
     const rezervacija = await rezervacijaService.nadjiRezervacijuSaSedistima(null, broj_karte);
@@ -250,10 +251,10 @@ module.exports.ocitajKartu = async (req, res) => {
         }
     }
 }
-module.exports.citac = function (req, res) {
+export const citac = function (req, res) {
     res.render('rezervacija/citac');
 }
-module.exports.citacUcitaj = function (req, res) {
+export const citacUcitaj = function (req, res) {
     const broj_karte = req.body.broj_karte;
     const sifra_karte = req.body.sifra_karte;
     res.redirect(`../rezervacija/prikazi/${broj_karte}/${sifra_karte}`);

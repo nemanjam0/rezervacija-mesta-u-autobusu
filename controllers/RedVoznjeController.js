@@ -1,20 +1,17 @@
-const express = require('express')
-const { sequelize, RedVoznje, Prevoznik, Autobus, Destinacija, Cenovnik, Stanica, Polazak } = require('../models');
-const parser = require('body-parser');
-const moment = require('moment')
-const { redirect } = require('express/lib/response');
-const Redirect = require('./../helpers/Redirect');
-const { Op } = require('sequelize');
-const polazakService = require('./../services/polazakService');
-const cenovnikService = require('./../services/cenovnikService');
-const { dodajMinuteNaVreme } = require('./../helpers/Vreme');
-module.exports.pretragaPrikazi = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+import moment from 'moment';
+import * as Redirect from './../helpers/Redirect.js'
+import * as polazakService from './../services/polazakService.js';
+import * as cenovnikService from './../services/cenovnikService.js';
+import { dodajMinuteNaVreme } from './../helpers/Vreme.js';
+import sequelize from '../models/index.js';
+const { Autobus, Cenovnik, Destinacija, Polazak, Prevoznik, RedVoznje, Stanica } = sequelize.models;
+export const pretragaPrikazi = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
     const destinacije = await Destinacija.findAll();
     const danasnji_datum = (new Date()).toISOString().split('T')[0];
     res.render('redvoznje/pretraga', { destinacije: destinacije, danasnji_datum: danasnji_datum });
 }
-module.exports.rezultatiPretrage = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+export const rezultatiPretrage = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
 
     const datum_polaska = moment(req.body.datum_polaska);
@@ -36,11 +33,10 @@ module.exports.rezultatiPretrage = async (req, res) =>//prikazuje dijalog za kre
         case 7: naziv_dana = "Nedelja"; break;
     }
     //kreiraj metodu za dodavanje minuta na vreme i prosledi je u res.locals ili smesti u promenjivu koju ces da saljes kao parametar viewu
-    console.log("\n\n\n");
-    console.log(JSON.stringify(cenovnici));
+
     res.render('redvoznje/pretraga', { naziv_dana: naziv_dana, broj_putnika: broj_putnika, datum_polaska: datum_polaska_srpski_format, destinacije: destinacije, cenovnici: cenovnici, dodajMinuteNaVreme: dodajMinuteNaVreme });
 }
-module.exports.kreiraj = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+export const kreiraj = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
     const prevoznici = Prevoznik.findAll();
     const autobusi = Autobus.findAll();
@@ -48,9 +44,8 @@ module.exports.kreiraj = async (req, res) =>//prikazuje dijalog za kreiranje nov
     const danasnji_datum = (new Date()).toISOString().split('T')[0];
     res.render('redvoznje/kreiraj', { danasnji_datum: danasnji_datum, prevoznici: await prevoznici, autobusi: await autobusi, destinacije: await destinacije });
 }
-module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
+export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
-    console.log('hit');
     const str = JSON.stringify(req.body);
     const naziv = req.body.naziv;
     const ponedeljak = req.body.ponedeljak ? '1' : '0';
@@ -117,7 +112,7 @@ module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 
     //console.log(rezultat.sql);
 }
-module.exports.kopiraj = async (req, res) =>//prikazuje edit stranicu
+export const kopiraj = async (req, res) =>//prikazuje edit stranicu
 {
     const id = req.params.id;
     const danasnji_datum = (new Date()).toISOString().split('T')[0];
@@ -125,7 +120,7 @@ module.exports.kopiraj = async (req, res) =>//prikazuje edit stranicu
     res.render('redvoznje/kopiraj', { id: id, danasnji_datum: danasnji_datum, autobusi: autobusi });
 
 }
-module.exports.sacuvajkopiju = async (req, res) =>//cuva izmene
+export const sacuvajkopiju = async (req, res) =>//cuva izmene
 {
     const id = req.params.id;
     const naziv = req.body.naziv;
@@ -167,7 +162,6 @@ module.exports.sacuvajkopiju = async (req, res) =>//cuva izmene
         }
     )
     const broj_stanica = stanice.length;
-    console.log(broj_stanica);
     const najdalja = { minuti: 0, kilometri: 0 }
     if (obrni_smer) {
         stanice.forEach((stanica) => {
@@ -191,7 +185,6 @@ module.exports.sacuvajkopiju = async (req, res) =>//cuva izmene
                 }
 
             })
-            console.log(this.stanice);
             this.cenovnik.forEach((cena) => {
                 cena.red_voznje_id = redvoznje.id
                 if (obrni_smer) {
@@ -208,13 +201,12 @@ module.exports.sacuvajkopiju = async (req, res) =>//cuva izmene
         }.bind({ cenovnik: cenovnik, stanice: stanice, autobus_id: autobus_id, rok_vazenja: rok_vazenja, pocetak_vazenja: pocetak_vazenja, ponedeljak: ponedeljak, utorak: utorak, sreda: sreda, cetvrtak: cetvrtak, petak: petak, subota: subota, nedelja: nedelja }));
     }
     catch (err) {
-        console.log(err);
         Redirect.backWithValidationErrors(req, res, err);
         return;
     }
     Redirect.backWithSuccess(req, res, "Novi red vožnje uspesno kreiran");
 }
-module.exports.lista = async (req, res) => {
+export const lista = async (req, res) => {
     const redovi_voznje = await RedVoznje.findAll({
         include:
             [

@@ -1,42 +1,20 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Cenovnik extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      this.belongsTo(models.RedVoznje,{
-        foreignKey:'red_voznje_id',
-        as:'red_voznje'
-      });
-      this.belongsTo(models.Destinacija,{
-        foreignKey:'pocetna_destinacija_id',
-        as:'pocetna_destinacija'
-      });
-      this.belongsTo(models.Destinacija,{
-        foreignKey:'krajnja_destinacija_id',
-        as:'krajnja_destinacija'
-      });
-    }
-  };
-  Cenovnik.init({
+import sequelize from "sequelize";
+const DataTypes = sequelize.DataTypes;
+const Cenovnik = {
+  init: (db) => db.define('Cenovnik', {
     red_voznje_id: DataTypes.INTEGER,
     pocetna_destinacija_id: DataTypes.INTEGER,
     krajnja_destinacija_id: DataTypes.INTEGER,
-    cena_jedan_smer: 
+    cena_jedan_smer:
     {
-      type:DataTypes.FLOAT,
+      type: DataTypes.FLOAT,
       validate:
       {
         isFloat:
         {
-          args:true,
-          msg:"Cene karata mogu biti samo celi ili decimalni brojevi"
+          args: true,
+          msg: "Cene karata mogu biti samo celi ili decimalni brojevi"
         }
       }
     },
@@ -44,9 +22,24 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Cenovnik',
-    tableName:'cenovnici',
-    createdAt:'vreme_kreiranja',
+    tableName: 'cenovnici',
+    createdAt: 'vreme_kreiranja',
     updatedAt: 'poslednja_izmena',
-  });
-  return Cenovnik;
-};
+  }),
+  associate: (db) => {
+    db.models.Cenovnik.belongsTo(db.models.Destinacija, {
+      foreignKey: 'pocetna_destinacija_id',
+      as: 'pocetna_destinacija'
+    });
+    db.models.Cenovnik.belongsTo(db.models.Destinacija, {
+      foreignKey: 'krajnja_destinacija_id',
+      as: 'krajnja_destinacija'
+    });
+    db.models.Cenovnik.belongsTo(db.models.RedVoznje, {
+      foreignKey: 'red_voznje_id',
+      as: 'red_voznje'
+    });
+  }
+}
+
+export default Cenovnik;

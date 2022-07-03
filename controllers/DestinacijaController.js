@@ -1,13 +1,11 @@
-const express = require('express')
-const { sequelize, Destinacija } = require('./../models');
-const parser = require('body-parser');
-const Redirect = require('./../helpers/Redirect');
-const { redirect } = require('express/lib/response');
-module.exports.kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+import * as Redirect from './../helpers/Redirect.js'
+import sequelize from '../models/index.js';
+const { Destinacija } = sequelize.models;
+export const kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
     res.render('destinacija/kreiraj')
 }
-module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
+export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
     const naziv = req.body.naziv;
     const cena_peronske = req.body.cena_peronske;
@@ -21,7 +19,7 @@ module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
         )
     Redirect.backWithSuccess(req, res, 'Destinacija uspešno dodata');
 }
-module.exports.izmeni = async (req, res) =>//prikazuje edit stranicu
+export const izmeni = async (req, res) =>//prikazuje edit stranicu
 {
     const id = req.params.id;
     const destinacija = await Destinacija.findOne({
@@ -34,7 +32,7 @@ module.exports.izmeni = async (req, res) =>//prikazuje edit stranicu
     }
     res.render('destinacija/izmeni', { naziv: destinacija.ime, cena_peronske: destinacija.cena_peronske, id: id })
 }
-module.exports.promeni = (req, res) =>//cuva izmene
+export const promeni = (req, res) =>//cuva izmene
 {
     const naziv = req.body.naziv;
     const cena_peronske = req.body.cena_peronske
@@ -46,7 +44,7 @@ module.exports.promeni = (req, res) =>//cuva izmene
         .then((data) => Redirect.backWithSuccess(req, res, 'Izmene uspešno sačuvane'))
         .catch((err) => Redirect.backWithValidationErrors(req, res, err))
 }
-module.exports.lista = async (req, res) => {
+export const lista = async (req, res) => {
     const destinacije = await Destinacija.findAll();
     res.render('Destinacija/lista', { destinacije: destinacije });
 

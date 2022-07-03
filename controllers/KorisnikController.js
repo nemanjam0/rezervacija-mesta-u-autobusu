@@ -1,13 +1,13 @@
-const express = require('express')
-const { sequelize, Korisnik } = require('./../models');
-const parser = require('body-parser');
-const Redirect = require('./../helpers/Redirect');
-const bcrypt = require('bcrypt');
-module.exports.prijava = (req, res) =>//stranica
+import * as Redirect from './../helpers/Redirect.js'
+import bcrypt from 'bcrypt'
+import sequelize from '../models/index.js';
+const { Korisnik } = sequelize.models;
+
+export const prijava = (req, res) =>//stranica
 {
     res.render('korisnik/prijava')
 }
-module.exports.prijavi_korisnika = async (req, res) =>//POST tj prijava
+export const prijavi_korisnika = async (req, res) =>//POST tj prijava
 {
     const email = req.body.email;
     const lozinka = req.body.lozinka;
@@ -45,11 +45,11 @@ module.exports.prijavi_korisnika = async (req, res) =>//POST tj prijava
     }
     res.end();
 }
-module.exports.noviPrikazi = (req, res) =>//stranica
+export const noviPrikazi = (req, res) =>//stranica
 {
     res.render('korisnik/novi')
 }
-module.exports.novi = async (req, res) =>//POST/registracija
+export const novi = async (req, res) =>//POST/registracija
 {
     const ime = req.body.ime;
     const prezime = req.body.prezime;
@@ -72,11 +72,11 @@ module.exports.novi = async (req, res) =>//POST/registracija
         Redirect.backToRouteWithSuccess(req, res, '/korisnik/kreiraj', 'Novi korisnik uspešno kreiran');
     }
 }
-module.exports.registracija = (req, res) =>//stranica
+export const registracija = (req, res) =>//stranica
 {
     res.render('korisnik/registracija')
 }
-module.exports.registruj = async (req, res) =>//POST/registracija
+export const registruj = async (req, res) =>//POST/registracija
 {
     const ime = req.body.ime;
     const prezime = req.body.prezime;
@@ -98,7 +98,7 @@ module.exports.registruj = async (req, res) =>//POST/registracija
         res.redirect('/prijava');
     }
 }
-module.exports.odjava = async (req, res) => {
+export const odjava = async (req, res) => {
     req.session.korisnik_id = null;
     req.session.tip_naloga = null;
     res.locals.tip_naloga = null;

@@ -1,28 +1,21 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Prevoznik extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  };
-  Prevoznik.init({
+import sequelize from 'sequelize'
+const DataTypes = sequelize.DataTypes;
+const Prevoznik = {
+  init: (db) => db.define('Prevoznik', {
     naziv: DataTypes.STRING,
     logo_url: DataTypes.STRING,
     opis: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Prevoznik',
-    tableName:'prevoznici',
-    createdAt:'vreme_kreiranja',
+    tableName: 'prevoznici',
+    createdAt: 'vreme_kreiranja',
     updatedAt: 'poslednja_izmena',
-  });
-  return Prevoznik;
-};
+  }),
+  associate: () => {
+
+  }
+}
+
+export default Prevoznik;

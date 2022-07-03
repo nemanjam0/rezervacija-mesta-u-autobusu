@@ -1,12 +1,13 @@
-const express = require('express')
-const { sequelize, Autobus } = require('../models');
-const parser = require('body-parser');
-const Redirect = require('./../helpers/Redirect');
-module.exports.kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+
+import * as Redirect from './../helpers/Redirect.js'
+import sequelize from '../models/index.js';
+const { Autobus } = sequelize.models;
+export const kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
     res.render('autobus/kreiraj')
 }
-module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
+
+export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
     const naziv = req.body.naziv;
     const broj_redova = req.body.broj_redova;

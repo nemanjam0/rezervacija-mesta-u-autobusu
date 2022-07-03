@@ -1,13 +1,12 @@
-const express = require('express')
-const { sequelize, Prevoznik } = require('../models');
-const parser = require('body-parser');
-const { redirect } = require('express/lib/response');
-const Redirect = require('./../helpers/Redirect');
-module.exports.kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
+import * as Redirect from './../helpers/Redirect.js'
+import sequelize from '../models/index.js';
+const { Prevoznik } = sequelize.models;
+
+export const kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
     res.render('prevoznik/kreiraj')
 }
-module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
+export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
     const logo_url = req.file ? req.file.path : undefined;//provera pre nego sto pokusamo da pristupimo svojstvu nepostojeceg objekta
     const naziv = req.body.naziv;
@@ -22,7 +21,7 @@ module.exports.sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
         )
     Redirect.backWithSuccess(req, res, 'Novi prevoznik uspešno kreiran.')
 }
-module.exports.izmeni = async (req, res) =>//prikazuje edit stranicu
+export const izmeni = async (req, res) =>//prikazuje edit stranicu
 {
     const id = req.params.id;
     const prevoznik = await Prevoznik.findOne({
@@ -35,7 +34,7 @@ module.exports.izmeni = async (req, res) =>//prikazuje edit stranicu
     }
     res.render('prevoznik/izmeni', { naziv: prevoznik.naziv, opis: prevoznik.opis, id: id })
 }
-module.exports.promeni = (req, res) =>//cuva izmene
+export const promeni = (req, res) =>//cuva izmene
 {
     const logo_url = req.file ? req.file.path : null;//prilikom izmene ako nije zakacio nijedan fajl onda setujemo na null
     const naziv = req.body.naziv;
@@ -53,7 +52,7 @@ module.exports.promeni = (req, res) =>//cuva izmene
         .catch((err) => Redirect.backWithValidationErrors(req, res, err))
 
 }
-module.exports.lista = async (req, res) => {
+export const lista = async (req, res) => {
     const prevoznici = await Prevoznik.findAll();
     res.render('prevoznik/lista', { prevoznici: prevoznici });
 

@@ -1,19 +1,14 @@
-const express = require('express');
-const { sequelize, Korisnik, RedVoznje, Stanica, Polazak, Cenovnik, Prevoznik } = require('./models');
-const destinacija_rute = require('./routes/destinacija');
-const moment = require('moment');
-const prevoznik_rute = require('./routes/prevoznik');
-const pocetne_rute = require('./routes/pocetne');
-const autobus_rute = require('./routes/autobus');
-const redvoznje_rute = require('./routes/redvoznje');
-const rezervacija_rute = require('./routes/rezervacija');
-const korisnik_rute = require('./routes/korisnik');
-const parser = require('body-parser');
-const { Op } = require('sequelize');
-const session = require('express-session')
-const polazakService = require('./services/polazakService')
-const cenovnikService = require('./services/cenovnikService')
-const { dodajMinuteNaVreme } = require('./helpers/Vreme');
+import express from 'express'
+import destinacija_rute from './routes/destinacija.js';
+import prevoznik_rute from './routes/prevoznik.js';
+import pocetne_rute from './routes/pocetne.js';
+import autobus_rute from './routes/autobus.js';
+import redvoznje_rute from './routes/redvoznje.js';
+import rezervacija_rute from './routes/rezervacija.js';
+import korisnik_rute from './routes/korisnik.js';
+import parser from 'body-parser';
+import session from 'express-session'
+import { dodajMinuteNaVreme } from './helpers/Vreme.js';
 const app = express();
 app.use(express.static('public'))
 app.use(parser.urlencoded({ extended: true }));

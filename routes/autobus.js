@@ -1,7 +1,8 @@
-const express=require("express");
-const autobusController = require("../controllers/AutobusController");
-const {autorizacijaZaTipNaloga,autorizacijaZaResurs,TipNaloga}=require('../services/autorizacijaService')
-let router=express.Router();
+import express from 'express'
+import * as autobusController from '../controllers/AutobusController.js';
+import { autorizacijaZaTipNaloga, autorizacijaZaResurs, TipNaloga } from '../services/autorizacijaService.js'
+
+let router = express.Router();
 router.get('/kreiraj', autorizacijaZaTipNaloga(TipNaloga.admin), autobusController.kreiraj);
 router.post('/kreiraj', autorizacijaZaTipNaloga(TipNaloga.admin), autobusController.sacuvaj);
-module.exports=router;
+export default  router;
