@@ -9,9 +9,8 @@ export const prijava = (req, res) =>//stranica
 }
 export const prijavi_korisnika = async (req, res) =>//POST tj prijava
 {
-    const email = req.body.email;
-    const lozinka = req.body.lozinka;
-    const zahtevan_url = req.body.zahtevan_url;
+    const { email, lozinka, zahtevan_url } = req.body;
+
     if (Redirect.backIfUndefinedOrEmpty(req, res, email, lozinka))//ako vrati true znaci da je uradio redirect i poslao response,time prekidamo izvrsenje logike ispod posto podaci nisu validni tj. nisu svi podaci uneti
     {
         return;
@@ -51,12 +50,8 @@ export const noviPrikazi = (req, res) =>//stranica
 }
 export const novi = async (req, res) =>//POST/registracija
 {
-    const ime = req.body.ime;
-    const prezime = req.body.prezime;
-    const broj_telefona = req.body.broj_telefona;
-    const email = req.body.email;
-    const sifra = req.body.sifra;
-    const tip_naloga = req.body.tip_naloga;
+    const { ime, prezime, broj_telefona, email, sifra, tip_naloga } = req.body;
+
     if (Redirect.backIfUndefinedOrEmpty(req, res, ime, prezime, broj_telefona, email, sifra, tip_naloga)) {
         return 1;
     }
@@ -78,11 +73,9 @@ export const registracija = (req, res) =>//stranica
 }
 export const registruj = async (req, res) =>//POST/registracija
 {
-    const ime = req.body.ime;
-    const prezime = req.body.prezime;
-    const broj_telefona = req.body.broj_telefona;
-    const email = req.body.email;
-    const sifra = req.body.sifra;
+
+    const { ime, prezime, broj_telefona, email, sifra } = req.body;
+    
     if (Redirect.backIfUndefinedOrEmpty(req, res, ime, prezime, broj_telefona, email, sifra)) {
         return 1;
     }

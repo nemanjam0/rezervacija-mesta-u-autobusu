@@ -11,13 +11,10 @@ const { Autobus, Destinacija, Polazak, Povratak, RezervisanoSediste, Stanica } =
 const Op = Sequelize.Op;
 export const prikazi = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
-    const red_voznje_id = req.params.red_voznje_id;
-    const pocetna_destinacija_id = req.params.pocetna_destinacija;
-    const krajnja_destinacija_id = req.params.krajnja_destinacija;
+    const { red_voznje_id, pocetna_destinacija_id, krajnja_destinacija_id, broj_putnika } = req.params;
     const povratno = req.params.tip_karte == 'povratna';
     let cena_karte = 0;
     const danasnji_datum = moment().format('YYYY-MM-DD');
-    const broj_putnika = req.params.broj_putnika;
     const vreme_polaska = moment(decodeURIComponent(req.params.enkodovano_vreme), 'DD.MM.YYYY h:m:s');
     const satnica_polaska = vreme_polaska.format("h:m:s");
     const cenovnik = await cenovnikService.nadjiZaDestinacijeIDatum(pocetna_destinacija_id, krajnja_destinacija_id, vreme_polaska.format('YYYY-MM-DD'), red_voznje_id);
@@ -61,8 +58,8 @@ export const prikazi = async (req, res) =>//prikazuje dijalog za kreiranje nove 
     //res.end(JSON.stringify(cenovnik));
 }
 export const terminiZaPovratak = async (req, res) => {
-    const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
-    const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
+    const { pocetna_destinacija_id, krajnja_destinacija_id } = req.params;
+
     const datum_polaska = decodeURIComponent(req.params.enkodovan_datum);
     const prevoznik_id = req.params.prevoznik_id;
     const cenovnici = await cenovnikService.nadjiZaDestinacijeIDatum(pocetna_destinacija_id, krajnja_destinacija_id, datum_polaska, null, prevoznik_id);
@@ -71,16 +68,11 @@ export const terminiZaPovratak = async (req, res) => {
     res.end(JSON.stringify(vremena.sort((a, b) => a.vreme > b.vreme ? 1 : -1)));
 }
 export const prikaziAutobus = async (req, res) => {
-    const red_voznje_id = req.params.red_voznje_id;
-    const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
-    const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
-    const broj_putnika = req.params.broj_putnika;
-    const naziv_putovanja = req.params.naziv_putovanja;
+    const { red_voznje_id, pocetna_destinacija_id, krajnja_destinacija_id, broj_putnika, naziv_putovanja } = req.params;
     const vreme = decodeURIComponent(req.params.vreme_enkodovano);
     const datum = decodeURIComponent(req.params.datum_enkodovan);
-    console.log(datum, vreme);
     const vreme_polaska = moment(datum + " " + vreme, "YYYY-MM-DD hh:mm:ss");
-    console.log(vreme_polaska);
+
     const polazak = await Polazak.findOne({
         where:
         {
@@ -95,7 +87,6 @@ export const prikaziAutobus = async (req, res) => {
                 }
             ],
     })
-    console.log(polazak);
     const rezervisana_sedista = await rezervacijaService.prikaziZauzetaSediste(polazak.id, pocetna_destinacija_id, krajnja_destinacija_id);
     res.render('rezervacija/autobus-sedista', { rezervisana_sedista, naziv_putovanja, autobus: polazak.autobus, polazak, broj_putnika, pocetna_destinacija_id, krajnja_destinacija_id })
 }
@@ -142,11 +133,8 @@ export const rezervisi = async (req, res) => {
     Redirect.backWithSuccess(req, res, 'Rezervacija uspešno kreirana');
 }
 export const proveriRezervisanostSedista = async (req, res) => {
-    const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
-    const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
-    const red = req.params.red;
-    const mesto_u_redu = req.params.mesto_u_redu;
-    const polazak_id = req.params.polazak_id;
+    const { pocetna_destinacija_id, krajnja_destinacija_id, red, mesto_u_redu, polazak_id } = req.params;
+
     const sediste = await rezervacijaService.prikaziZauzetaSediste(polazak_id, pocetna_destinacija_id, krajnja_destinacija_id, red, mesto_u_redu);
     let odg = {};
     if (Object.keys(sediste).length == 0) {
@@ -155,17 +143,11 @@ export const proveriRezervisanostSedista = async (req, res) => {
     else {
         odg = JSON.stringify({ sediste: `${red}_${mesto_u_redu}`, zauzeto: 1 });
     }
-    console.log(odg);
     res.send(odg);
 }
 export const privremenoRezervisi = async (req, res) => {
-    const pocetna_destinacija_id = req.params.pocetna_destinacija_id;
-    const krajnja_destinacija_id = req.params.krajnja_destinacija_id;
-    const red = req.params.red;
-    const mesto_u_redu = req.params.mesto_u_redu;
+    const { pocetna_destinacija_id, krajnja_destinacija_id, red, mesto_u_redu, polazak_id, korisnik_id } = req.body
     const vreme_isteka = decodeURIComponent(req.params.vreme_isteka);
-    const polazak_id = req.params.polazak_id;
-    const korisnik_id = req.session.korisnik_id;
     const sediste = await rezervacijaService.privremenoRezervisi(polazak_id, korisnik_id, pocetna_destinacija_id, krajnja_destinacija_id, red, mesto_u_redu, vreme_isteka)
     console.log(sediste.id);
     res.send({ id: sediste.id });
@@ -202,8 +184,7 @@ export const prikaziRezervisanaSedista = async (req, res) => {
     res.render('rezervacija/rezervisana-sedista', { rezervacija, vreme_polaska })
 }
 export const prikaziKartu = async (req, res) => {
-    const broj_karte = req.params.id_karte;
-    const sifra_karte = req.params.sifra_karte;
+    const { broj_karte, sifra_karte } = req.params;
     const rezervacija = await rezervacijaService.nadjiRezervacijuSaSedistima(null, broj_karte);
     const vlasnik_resursa_id = rezervacija.korisnik_id;
     if (!imaPristupResursu(vlasnik_resursa_id, req.session.korisnik_id, req.session.tip_naloga, TipNaloga.admin, TipNaloga.kondukter, TipNaloga.prodavac)) {
@@ -225,8 +206,8 @@ export const prikaziKartu = async (req, res) => {
     res.render('rezervacija/karta', { rezervacija: rezervacija, vreme_polaska })
 }
 export const ocitajKartu = async (req, res) => {
-    const broj_karte = req.params.id_karte;
-    const sifra_karte = req.params.sifra_karte;
+    console.log("HIT");
+    const { broj_karte, sifra_karte } = req.params;
     const rezervacija = await rezervacijaService.nadjiRezervacijuSaSedistima(null, broj_karte);
     if (rezervacija.length == 0 || rezervacija.rezervisana_sedista.length == 0) {
         Redirect.toRouteWithError(req, res, '/rezervacija/citac', 'Karta sa tim brojem ne postoji.')
@@ -254,9 +235,9 @@ export const ocitajKartu = async (req, res) => {
 export const citac = function (req, res) {
     res.render('rezervacija/citac');
 }
+
 export const citacUcitaj = function (req, res) {
-    const broj_karte = req.body.broj_karte;
-    const sifra_karte = req.body.sifra_karte;
+    const { broj_karte, sifra_karte } = req.body;
     res.redirect(`../rezervacija/prikazi/${broj_karte}/${sifra_karte}`);
 }
 

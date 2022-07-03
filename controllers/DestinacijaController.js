@@ -7,8 +7,8 @@ export const kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destin
 }
 export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
-    const naziv = req.body.naziv;
-    const cena_peronske = req.body.cena_peronske;
+    const { naziv, cena_peronske } = req.body;
+
     if (Redirect.backIfUndefinedOrEmpty(req, res, naziv, cena_peronske)) {
         return;
     }
@@ -34,8 +34,7 @@ export const izmeni = async (req, res) =>//prikazuje edit stranicu
 }
 export const promeni = (req, res) =>//cuva izmene
 {
-    const naziv = req.body.naziv;
-    const cena_peronske = req.body.cena_peronske
+    const { naziv, cena_peronske } = req.body;
     const id = req.params.id;
     if (Redirect.backIfUndefinedOrEmpty(req, res, naziv, cena_peronske, id)) {
         return;

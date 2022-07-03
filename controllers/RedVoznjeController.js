@@ -13,7 +13,6 @@ export const pretragaPrikazi = async (req, res) =>//prikazuje dijalog za kreiran
 }
 export const rezultatiPretrage = async (req, res) =>//prikazuje dijalog za kreiranje nove destinacije
 {
-
     const datum_polaska = moment(req.body.datum_polaska);
     const datum_polaska_srpski_format = datum_polaska.format('DD.MM.YYYY.');
     const broj_putnika = req.body.broj_putnika;
@@ -46,8 +45,7 @@ export const kreiraj = async (req, res) =>//prikazuje dijalog za kreiranje nove 
 }
 export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
-    const str = JSON.stringify(req.body);
-    const naziv = req.body.naziv;
+    const { naziv, autobus_id, vreme_polaska, pocetak_vazenja, rok_vazenja, idovi_stanica, prevoznik, vremena, kilometri } = req.body;
     const ponedeljak = req.body.ponedeljak ? '1' : '0';
     const utorak = req.body.utorak ? '1' : '0'
     const sreda = req.body.sreda ? '1' : '0'
@@ -55,26 +53,12 @@ export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
     const petak = req.body.petak ? '1' : '0'
     const subota = req.body.subota ? '1' : '0'
     const nedelja = req.body.nedelja ? '1' : '0'
-    const vreme_polaska = req.body.vreme_polaska;
-    const autobus_id = req.body.autobus;
-    const pocetak_vazenja = req.body.pocetak_vazenja;
-    const rok_vazenja = req.body.rok_vazenja;
-    const idovi_stanica = req.body.stanice;
-    const prevoznik = req.body.prevoznik;
-    const vremena = req.body.vreme;//sadrzi niz koji za svaku stanicu sadrzi broj minuta od pocetne stanice
-    const kilometri = req.body.kilometri;//sadrzi niz koji za svaku stanicu sadrzi broj kilometra od pocetne stanice
     const cenovnik_modeli = [];
     const stanica_modeli = [];
-    /* Redvoznje.create(red_voznje_model).catch(err=>{
-         Redirect.backWithError(req,res,'Došlo je do greške');
-     })*/
-    const k = 1;
+    let k = 1;
     const red_voznje_model = { naziv: naziv, prevoznik_id: prevoznik, pocetak_vazenja: pocetak_vazenja, rok_vazenja: rok_vazenja, vreme_polaska: vreme_polaska, ponedeljak: ponedeljak, utorak: utorak, sreda: sreda, cetvrtak: cetvrtak, petak: petak, subota: subota, nedelja: nedelja };
 
-    //console.log(red_voznje_model,cenovnik_modeli,stanica_modeli,polasci_modeli);
-    // res.send(JSON.stringify(jedansmer_cenovnik))
-    // res.end(JSON.stringify(cenovnik_modeli))
-    //res.end(str);
+
     try {
         const rezultat = await sequelize.transaction(async (t) => {
             const redvoznje = await RedVoznje.create(red_voznje_model, { transaction: t })
@@ -101,7 +85,7 @@ export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
         })
     }
     catch (err) {
-        //console.log(err);
+        console.log(err);
         Redirect.backWithValidationErrors(req, res, err);
         return;
     }
@@ -122,8 +106,8 @@ export const kopiraj = async (req, res) =>//prikazuje edit stranicu
 }
 export const sacuvajkopiju = async (req, res) =>//cuva izmene
 {
+    const { naziv, vreme_polaska, rok_vazenja, pocetak_vazenja, obrni_smer, autobus_id, red_voznje_id } = req.body
     const id = req.params.id;
-    const naziv = req.body.naziv;
     const ponedeljak = req.body.ponedeljak ? '1' : '0';
     const utorak = req.body.utorak ? '1' : '0'
     const sreda = req.body.sreda ? '1' : '0'
@@ -131,11 +115,6 @@ export const sacuvajkopiju = async (req, res) =>//cuva izmene
     const petak = req.body.petak ? '1' : '0'
     const subota = req.body.subota ? '1' : '0'
     const nedelja = req.body.nedelja ? '1' : '0'
-    const vreme_polaska = req.body.vreme_polaska;
-    const rok_vazenja = req.body.rok_vazenja;
-    const pocetak_vazenja = req.body.pocetak_vazenja;
-    const obrni_smer = req.body.obrni_smer ? true : false;
-    const autobus_id = req.body.autobus;
     const red_voznje = await RedVoznje.findByPk(id);
     const stanice = await Stanica.findAll(
         {

@@ -9,8 +9,8 @@ export const kreiraj = (req, res) =>//prikazuje dijalog za kreiranje nove destin
 export const sacuvaj = async (req, res) =>//cuva novokreiranu destinaciju
 {
     const logo_url = req.file ? req.file.path : undefined;//provera pre nego sto pokusamo da pristupimo svojstvu nepostojeceg objekta
-    const naziv = req.body.naziv;
-    const opis = req.body.opis;
+
+    const { naziv, opis } = req.body;
     if (Redirect.backIfUndefinedOrEmpty(req, res, naziv, opis, logo_url)) {
         return;
     }
